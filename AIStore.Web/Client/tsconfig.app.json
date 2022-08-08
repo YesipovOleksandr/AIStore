@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/app",
+    "types": [ "gapi" ]
+  },
+  "angularCompilerOptions": {
+    "enableIvy": true
+  },
+  "files": [
+    "src/app/shared/src/main.ts"
+  ],
+  "include": [
+    "src/app/shared/src/**/*.d.ts"
+  ]
+}

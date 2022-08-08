@@ -1,0 +1,22 @@
+{
+  "rules": [
+    {
+      "name": "default",
+      "controller": "Home",
+      "action": "Index",
+      "languages": [
+        "en"
+      ],
+      "url": ""
+    },
+    {
+      "name": "test",
+      "controller": "Home",
+      "action": "Test",
+      "languages": [
+        "en"
+      ],
+      "url": "test"
+    }
+  ]
+}

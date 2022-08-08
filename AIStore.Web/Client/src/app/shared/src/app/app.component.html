@@ -1,0 +1,8 @@
+
+<div *ngIf="router.url.includes('/qwe'); else functional">
+  <mainPage></mainPage>
+</div>
+
+<ng-template #functional>
+  <router-outlet></router-outlet>
+</ng-template>
