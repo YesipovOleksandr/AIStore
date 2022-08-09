@@ -1,0 +1,85 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200&family=Roboto:wght@500&display=swap');
+
+body header{
+    font-family: 'Roboto', sans-serif !important;
+}
+header {
+    position: fixed;
+    top: 0;
+    left:0;
+    right:0;
+}
+.header_block {
+    background: #272733;
+    height: 93px;
+    display: flex;
+    
+}
+
+.header_block_img {
+    display: flex;
+    align-items: center;
+    padding-left: 50px;
+}
+
+.header_block_img img {
+    width: 44px;
+    height: 32px;
+}
+
+.header_block_center {
+    display: flex;
+    align-items: center;
+    margin: auto;
+}
+
+.header_block_center a {
+    font-size: 16px;
+    color: #ffffff;
+    font-weight: 500;
+    line-height: 22px;
+    background: none;
+    border: none;
+    text-decoration: none;
+    margin-right:15px;
+    margin-left:10px;
+}
+
+.header_block_end {
+    display: flex;
+    align-items: center;
+    margin-right: 50px;
+   
+}
+
+.header_block_end_img{
+    margin-top:5px;
+}
+
+.header_block_end select {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #ffffff;
+    font-weight: 500;
+    line-height: 22px;
+    margin-left: 15px;
+}
+.header_block_end a {
+    font-size: 16px;
+    color: #ffffff;
+    font-weight: 500;
+    line-height: 22px;
+    text-decoration: none;
+    margin-left: 15px;
+}
+
+.header_block_end button {
+    border-radius: 28px;
+    height: 40px;
+    width: 150px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 22px;
+    margin-left: 15px;
+}

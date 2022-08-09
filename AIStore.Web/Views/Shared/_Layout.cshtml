@@ -5,14 +5,41 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - AIStore.Web</title>
-        @RenderSection("Styles", false)
+    <link rel="stylesheet" href="/template/dist/css/pages/Layout/Heder.css" asp-append-version="true" />
+   <link rel="stylesheet" href="/template/dist/css/pages/Layout/Footer.css" asp-append-version="true" />
+    @RenderSection("Styles", false)
 </head>
 <body>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <header>
+        <div class="header_block">
+            <div class="header_block_img">
+                <img src="/template/images/icons/logo.svg" />
+            </div>
+            <div class="header_block_center">
+                <a href="#"> Услуги и цены</a>
+                   <a href="#">Для разработчиков</a>
+                     <a href="#"> О нас</a>
+         </div> 
+         <div class="header_block_end">
+           <a href="#" class="header_block_end_img">
+               <img src="/template/images/icons/search.svg"/>
+           </a>
+           <select>
+          <option>RU</option>
+          <option>UA</option>
+            </select>
+            <a href="#">Вход</a>
+            <button>Регистрация </button>
+
+         </div>
+        </div>
+
+    </header>
+    <main>
+        @RenderBody()
+    </main>
     @await RenderSectionAsync("Scripts", required: false)
+    <footer>
+    </footer>
 </body>
 </html>
