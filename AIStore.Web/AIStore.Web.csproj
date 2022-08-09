@@ -9,6 +9,7 @@
   <ItemGroup>
     <None Remove="Client\browserslist" />
     <None Remove="Client\README.md" />
+    <None Remove="Client\src\app\mainPage\mainPage-routing.module.ts" />
     <None Remove="Client\src\app\test\test-routing.module.ts" />
   </ItemGroup>
 
@@ -31,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="Client\src\app\mainPage\mainPage-routing.module.ts" />
     <TypeScriptCompile Include="Client\src\app\test\test-routing.module.ts" />
   </ItemGroup>
 
