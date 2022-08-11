@@ -6,72 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - AIStore.Web</title>
     <link rel="stylesheet" href="/template/dist/css/pages/Layout/Heder.css" asp-append-version="true" />
-   <link rel="stylesheet" href="/template/dist/css/pages/Layout/Footer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="/template/dist/css/pages/Layout/Footer.css" asp-append-version="true" />
     @RenderSection("Styles", false)
 </head>
 <body>
-    <header>
-        <div class="header_block">
-            <div class="header_block_img">
-                <img src="/template/images/icons/logo.svg" />
-            </div>
-            <div class="header_block_center">
-                <a href="#"> Услуги и цены</a>
-                   <a href="#">Для разработчиков</a>
-                     <a href="#"> О нас</a>
-         </div> 
-         <div class="header_block_end">
-           <a href="#" class="header_block_end_img">
-               <img src="/template/images/icons/search.svg"/>
-           </a>
-           <select>
-          <option>RU</option>
-          <option>UA</option>
-            </select>
-            <a href="#">Вход</a>
-            <button>Регистрация </button>
-
-         </div>
-        </div>
-
-    </header>
+    @await Html.PartialAsync("/Views/Shared/Header/_Header.cshtml")
     <main>
-
-
+        @RenderBody()
     </main>
+    @await Html.PartialAsync("~/Views/Shared/Footers/_Footer.cshtml")
+    @await Html.PartialAsync("~/Views/Shared/Pop-up/_Login.cshtml")
+    @await Html.PartialAsync("~/Views/Shared/Pop-up/_Signup.cshtml")
+    <script src="/template/dist/js/Common/pop-up-min.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-    <footer>
-       <div class="footer_block">
-        <div class="footer_block_upper">
-            <div class="footer_block_img">
-                <img src="/template/images/icons/logo.svg" />
-            </div>
-            <div class="footer_block_center">
-                <a href="#"> Услуги и цены</a>
-                   <a href="#">Для разработчиков</a>
-                     <a href="#"> О нас</a>
-         </div> 
-         <div class="footer_block_end">
-           <a href="#" class="header_block_end_img">
-               <img src="/template/images/icons/search.svg"/>
-           </a>
-           <select>
-          <option>RU</option>
-          <option>UA</option>
-            </select>
-             </div>
-        </div>
-        <div class="footer_block_lower">
-           <div class="lower_text_one">
-            <a> Политика конфиденциальности</a>
-            <a>Политика использования </a>
-            </div>
-            <div class="lower_text_two" >
-                <a> Copyright © All Rights Reserved</a>
-            </div>
-        </div>
-        </div>
-    </footer>
-   
 </body>
 </html>
