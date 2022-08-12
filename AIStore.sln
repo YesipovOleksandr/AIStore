@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AIStore.Domain", "AIStore.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AIStore.Dependencies", "AIStore.Dependencies\AIStore.Dependencies.csproj", "{A26D3F1C-E8FA-4BAC-A5D7-E0A47E879B55}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIStore.Api", "AIStore.Api\AIStore.Api.csproj", "{D41B05C0-6D6F-472B-8527-5F208485C34F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A26D3F1C-E8FA-4BAC-A5D7-E0A47E879B55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A26D3F1C-E8FA-4BAC-A5D7-E0A47E879B55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A26D3F1C-E8FA-4BAC-A5D7-E0A47E879B55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D41B05C0-6D6F-472B-8527-5F208485C34F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D41B05C0-6D6F-472B-8527-5F208485C34F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D41B05C0-6D6F-472B-8527-5F208485C34F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D41B05C0-6D6F-472B-8527-5F208485C34F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

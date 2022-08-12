@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
-using AIStore.Domain.Abstract.Services;
 using AIStore.Domain.Models.Routing.LocalizedRoute;
+using AIStore.Domain.Abstract;
 
 namespace AIStore.Domain.Concrete
 {

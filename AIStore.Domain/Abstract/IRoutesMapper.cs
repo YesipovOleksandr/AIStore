@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using AIStore.Domain.Models.Routing;
 
-namespace AIStore.Domain.Abstract.Services
+namespace AIStore.Domain.Abstract
 {
     public interface IRoutesMapper
     {

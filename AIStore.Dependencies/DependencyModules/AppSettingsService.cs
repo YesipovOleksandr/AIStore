@@ -1,6 +1,6 @@
 ﻿using AIStore.Domain.Models.Settings;
 using Microsoft.Extensions.Configuration;
-using AIStore.Domain.Abstract.Services;
+using AIStore.Domain.Abstract;
 
 namespace AIStore.Dependencies.DependencyModules
 {

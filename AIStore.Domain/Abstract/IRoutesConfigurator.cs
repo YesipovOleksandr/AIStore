@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Routing;
 
-namespace AIStore.Domain.Abstract.Services
+namespace AIStore.Domain.Abstract
 {
     public interface IRoutesConfigurator
     {

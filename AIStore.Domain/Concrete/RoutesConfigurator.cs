@@ -1,10 +1,5 @@
 ﻿using Microsoft.AspNetCore.Routing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AIStore.Domain.Abstract.Services;
+using AIStore.Domain.Abstract;
 
 namespace AIStore.Domain.Concrete
 {

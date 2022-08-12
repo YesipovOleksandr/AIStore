@@ -1,6 +1,6 @@
 ﻿using AIStore.Domain.Models.Settings;
 
-namespace AIStore.Domain.Abstract.Services
+namespace AIStore.Domain.Abstract
 {
     public interface IAppSettingsService
     {

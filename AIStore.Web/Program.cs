@@ -1,28 +1,19 @@
 using Microsoft.AspNetCore.Localization;
-using Microsoft.EntityFrameworkCore;
-using AIStore.DAL.Context;
-using AIStore.DAL.MappingProfile;
 using AIStore.Dependencies;
-using AIStore.Domain.Abstract.Services;
 using AIStore.Web.MappingProfile;
 using AIStore.Web.Providers;
+using AIStore.Domain.Abstract;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 var isProduction = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production";
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-
-});
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.RegisterDependencyModules();
 
-builder.Services.AddAutoMapper(typeof(WebMappingProfile), typeof(DataAccessMapingProfile));
+builder.Services.AddAutoMapper(typeof(WebMappingProfile));
 
 builder.Services.MapSettings(configuration);
 

@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using AIStore.Domain.Abstract.Services;
-using Microsoft.Extensions.Options;
-using AIStore.Domain.Models.Settings;
+using AIStore.Domain.Abstract;
 
 namespace Jironimo.Dependencies.DependencyModules
 {

@@ -1,10 +1,7 @@
-﻿using System.IO;
-using System.Linq;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
-using AIStore.Domain.Abstract.Services;
+using AIStore.Domain.Abstract;
 
 namespace AIStore.Domain.Concrete
 {
