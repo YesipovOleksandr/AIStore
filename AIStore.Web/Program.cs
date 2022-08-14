@@ -3,11 +3,18 @@ using AIStore.Dependencies;
 using AIStore.Web.MappingProfile;
 using AIStore.Web.Providers;
 using AIStore.Domain.Abstract;
+using Microsoft.EntityFrameworkCore;
+using AIStore.DAL.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 var isProduction = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production";
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
