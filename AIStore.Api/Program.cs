@@ -1,3 +1,4 @@
+using AIStore.Api.MappingProfile;
 using AIStore.DAL.Context;
 using AIStore.DAL.MappingProfile;
 using AIStore.Dependencies;
@@ -19,7 +20,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.RegisterDependencyModules();
 
-builder.Services.AddAutoMapper(typeof(DataAccessMapingProfile));
+builder.Services.AddAutoMapper(typeof(ApiMappingProfile), typeof(DataAccessMapingProfile));
 
 var app = builder.Build();
 

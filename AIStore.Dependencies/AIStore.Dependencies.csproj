@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AIStore.BLL\AIStore.BLL.csproj" />
     <ProjectReference Include="..\AIStore.DAL\AIStore.DAL.csproj" />
     <ProjectReference Include="..\AIStore.Domain\AIStore.Domain.csproj" />
   </ItemGroup>

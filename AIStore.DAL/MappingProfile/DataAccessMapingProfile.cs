@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using AIStore.DAL.Entities;
+using AutoMapper;
 
 namespace AIStore.DAL.MappingProfile
 {
@@ -6,7 +7,7 @@ namespace AIStore.DAL.MappingProfile
     {
         public DataAccessMapingProfile()
         {
-
+            CreateMap<User, Domain.Models.Users.User>().ReverseMap();
         }
     }
 }
