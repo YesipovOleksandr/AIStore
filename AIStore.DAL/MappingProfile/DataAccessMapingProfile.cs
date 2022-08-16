@@ -8,6 +8,8 @@ namespace AIStore.DAL.MappingProfile
         public DataAccessMapingProfile()
         {
             CreateMap<User, Domain.Models.Users.User>().ReverseMap();
+            CreateMap<UserRoles, Domain.Models.Users.UserRoles>().ReverseMap();
+            
         }
     }
 }

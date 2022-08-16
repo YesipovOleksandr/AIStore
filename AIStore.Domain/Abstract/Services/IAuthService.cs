@@ -4,7 +4,7 @@ namespace AIStore.Domain.Abstract.Services
 {
     public interface IAuthService
     {
-        bool Create(User user);
-        bool Authenticate(User user);
+        User Create(User user);
+        User Authenticate(User user);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AIStore.Domain.Abstract.Repository;
 using AIStore.Domain.Abstract.Services;
+using AIStore.Domain.Enums;
 using AIStore.Domain.Models.Users;
 
 namespace AIStore.BLL.Services
@@ -15,29 +16,30 @@ namespace AIStore.BLL.Services
             _hasher = hasher;
         }
 
-        public bool Authenticate(User model)
+        public User Authenticate(User model)
         {
             var user = _userRepository.Get(model.Login);
 
             if (user == null)
             {
-                return false;
+                return null;
             }
 
             if (!_hasher.Сompare(user.Password, model.Password))
             {
-                return false;
+                return null;
             }
 
-            return true;
+            return user;
         }
 
-        public bool Create(User user)
+        public User Create(User user)
         {
             User newUser = new User
             {
                 Login = user.Login,
                 Password = _hasher.GetHash(user.Password),
+                UserRoles=new List<UserRoles> { new UserRoles { User = user, Role = Role.User } }
             };
 
             return _userRepository.Create(newUser); ;
