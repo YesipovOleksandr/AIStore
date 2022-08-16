@@ -34,6 +34,7 @@ function varificationFormLogin() {
     else {
         email.classList.add("error");
         error.style.display = "block";
+        alert('невозможно.');
     
     }
    
