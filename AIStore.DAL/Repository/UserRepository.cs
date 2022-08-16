@@ -16,13 +16,13 @@ namespace AIStore.DAL.Repository
             _mapper = mapper;
         }
 
-        public bool Create(User user)
+        public User Create(User user)
         {
             var newUser = _mapper.Map<Entities.User>(user);
             _context.Add(newUser);
             _context.SaveChanges();
 
-            return true;
+            return _mapper.Map<User>(newUser);
         }
 
         public User Get(string login)

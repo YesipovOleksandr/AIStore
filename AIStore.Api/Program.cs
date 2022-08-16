@@ -2,9 +2,13 @@ using AIStore.Api.MappingProfile;
 using AIStore.DAL.Context;
 using AIStore.DAL.MappingProfile;
 using AIStore.Dependencies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
 
@@ -20,7 +24,28 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.RegisterDependencyModules();
 
+builder.Services.MapSettings(configuration);
+
 builder.Services.AddAutoMapper(typeof(ApiMappingProfile), typeof(DataAccessMapingProfile));
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = configuration["JWT:Audience"],
+        ValidIssuer = configuration["JWT:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
+    };
+});
 
 var app = builder.Build();
 

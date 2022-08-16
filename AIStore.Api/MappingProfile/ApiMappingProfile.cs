@@ -8,6 +8,7 @@ namespace AIStore.Api.MappingProfile
         public ApiMappingProfile()
         {
             CreateMap<LoginViewModel, Domain.Models.Users.User>().ReverseMap();
+            CreateMap<RegisterViewModel, Domain.Models.Users.User>().ReverseMap();           
         }
     }
 }
