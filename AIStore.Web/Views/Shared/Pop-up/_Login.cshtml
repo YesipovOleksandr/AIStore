@@ -25,13 +25,15 @@
                 </div>
                 <div class="block_left_popup">
                     <div class="popup_input_login">
-                        <input placeholder="Email" type="email"/>
+                        <input class="emailPopUp" oninput="OnInputValidationLogin()" placeholder="Email" type="email"/>
+                        <p class="error_email">Enter a valid email</p>
                     </div>
                     <div class="popup_input_password" >                         
-                        <input placeholder="Password"  type="password"/>
+                        <input class="passwordPopUp" oninput="OnInputValidationLoginPassword()" placeholder="Password"  type="password"/>
+                        <p class="error_password">Enter a password</p>
                     </div>
                     <a href="#">Forgot Password? </a>
-                    <button>Войти</button>
+                    <button onclick="varificationFormLogin()">Войти</button>
                  </div>
             </div>
         </div>

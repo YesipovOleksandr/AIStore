@@ -28,9 +28,10 @@
                         <p>
                             Use your email address
                         </p>
-                        <input placeholder="Email" type="email"/>
+                        <input class="email_sign_up" oninput="onInputValidationSignup()" placeholder="Email" type="email"/>
+                         <p class="errorEmail">Enter a valid email</p>
                     </div>
-                    <button>Войти</button>
+                    <button onclick="varificationSignUp()">Войти</button>
                  </div>
             </div>
         </div>

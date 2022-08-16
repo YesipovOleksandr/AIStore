@@ -174,3 +174,22 @@ margin-top:30px;
     margin-bottom:20px;
     margin-left:5px;
 }
+
+.error_email {
+ 
+    display: none;
+    color: red;
+    font-size: 14px !important;
+    margin-top: 0px;
+}
+
+.error {
+    border: 1px solid #ff0000 !important;
+}
+
+.error_password {
+    display: none;
+    color: red;
+    font-size: 14px !important;
+    margin-top: 0px;
+}
