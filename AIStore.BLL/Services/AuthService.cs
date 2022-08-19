@@ -33,7 +33,7 @@ namespace AIStore.BLL.Services
             return user;
         }
 
-        public User Create(User user)
+        public User Registration(User user)
         {
             User newUser = new User
             {

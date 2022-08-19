@@ -39,15 +39,18 @@ namespace AIStore.Web.Controllers.API
                 {
                     return Unauthorized();
                 }
-                var token = GenerateJWT(user);
+                AuthViewModel result = null;
 
-                return Ok(token);
+                result = _mapper.Map<AuthViewModel>(user);
+                result.Token = GenerateJWT(user);
+
+                return Ok(result);
             }
             else
             {
                 ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                return ValidationProblem(ModelState);
             }
-            return Ok();
         }
 
         [AllowAnonymous]
@@ -56,11 +59,18 @@ namespace AIStore.Web.Controllers.API
         {
             if (ModelState.IsValid)
             {
-                var user = _authService.Create(_mapper.Map<User>(model));
+                var user = _authService.Registration(_mapper.Map<User>(model));
                 if (user == null)
                 {
                     return BadRequest();
                 }
+
+                AuthViewModel result = null;
+
+                result = _mapper.Map<AuthViewModel>(user);
+                result.Token = GenerateJWT(user);
+
+                return Ok(result);
             }
             else
             {
@@ -76,15 +86,16 @@ namespace AIStore.Web.Controllers.API
             if (ModelState.IsValid)
             {
                 var user = _authService.IsUserLoginExist(model.Login);
-                if (!user)
+                if (user)
                 {
-                    ModelState.AddModelError("", "такой логин уже существует");
-                    return BadRequest();
+                    ModelState.AddModelError("", "логин уже существует");
+                    return ValidationProblem(ModelState);
                 }
             }
             else
             {
                 ModelState.AddModelError("", "Некорректные логин");
+                return ValidationProblem(ModelState);
             }
             return Ok();
         }
