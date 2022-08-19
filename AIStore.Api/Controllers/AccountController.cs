@@ -66,9 +66,14 @@ namespace AIStore.Web.Controllers.API
                 }
 
                 AuthViewModel result = null;
-
-                result = _mapper.Map<AuthViewModel>(user);
+               
+                result = _mapper.Map<AuthViewModel>(_authService.Authenticate(_mapper.Map<User>(model)));
                 result.Token = GenerateJWT(user);
+
+                if (result == null)
+                {
+                    return Unauthorized();
+                }
 
                 return Ok(result);
             }
