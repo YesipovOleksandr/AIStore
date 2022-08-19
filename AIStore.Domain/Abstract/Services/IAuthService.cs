@@ -6,5 +6,6 @@ namespace AIStore.Domain.Abstract.Services
     {
         User Create(User user);
         User Authenticate(User user);
+        bool IsUserLoginExist(string login);
     }
 }

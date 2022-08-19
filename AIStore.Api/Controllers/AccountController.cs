@@ -69,6 +69,26 @@ namespace AIStore.Web.Controllers.API
             return Ok();
         }
 
+        [AllowAnonymous]
+        [HttpPost("login-exist")]
+        public IActionResult IsExistEmail([FromBody] UserLoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = _authService.IsUserLoginExist(model.Login);
+                if (!user)
+                {
+                    ModelState.AddModelError("", "такой логин уже существует");
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Некорректные логин");
+            }
+            return Ok();
+        }
+
         private string GenerateJWT(User model)
         {
             var authParams = _settings.Value.JWTOptions;

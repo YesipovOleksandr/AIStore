@@ -18,7 +18,7 @@ namespace AIStore.BLL.Services
 
         public User Authenticate(User model)
         {
-            var user = _userRepository.Get(model.Login);
+            var user = _userRepository.GetByLogin(model.Login);
 
             if (user == null)
             {
@@ -42,7 +42,17 @@ namespace AIStore.BLL.Services
                 UserRoles=new List<UserRoles> { new UserRoles { User = user, Role = Role.User } }
             };
 
-            return _userRepository.Create(newUser); ;
+            return _userRepository.Create(newUser);
+        }
+
+        public bool IsUserLoginExist(string login)
+        {
+            var user = _userRepository.GetByLogin(login);
+            if (user == null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

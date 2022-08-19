@@ -5,7 +5,7 @@ namespace AIStore.Domain.Abstract.Repository
 {
     public interface IUserRepository
     {
-        User Get(string Login);
+        User GetByLogin(string Login);
         User Create(User user);
     }
 }

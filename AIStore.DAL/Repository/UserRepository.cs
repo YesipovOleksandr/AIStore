@@ -25,7 +25,7 @@ namespace AIStore.DAL.Repository
             return _mapper.Map<User>(newUser);
         }
 
-        public User Get(string login)
+        public User GetByLogin(string login)
         {
             var user = _mapper.Map<User>(_context.Users.FirstOrDefault(x => x.Login == login));
 
