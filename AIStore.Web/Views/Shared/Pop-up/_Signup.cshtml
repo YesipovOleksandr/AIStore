@@ -1,38 +1,53 @@
 ﻿<div id="popupSignUp" class="popup">
     <div class="popup_body">
         <div class="popup_content">
-            <a onclick="CloseSingUp()"  class="popup_close">
-              X
+            <a onclick="CloseSingUp()" class="popup_close">
+                X
             </a>
             <div class="popup_header">
-            <h2>Sign In</h2>
-           <div class="popup_header_signup">
-            <p> Don't have an account?</p>
-            <a href="#"> Sign Up</a>
-             </div>
+                <h2>Sign In</h2>
+                <div class="popup_header_signup">
+                    <p> Don't have an account?</p>
+                    <a href="#"> Sign Up</a>
+                </div>
             </div>
-            <div class="common_block_popup"> 
+            <div class="common_block_popup">
                 <div class="block_right_popup">
                     <div class="block_right_Facebook">
                         <a href="#">Sign in with Facebook </a>
                     </div>
-                     <div class="block_right_Google">
-                        <a href="#" >Sign in with Google </a>
+                    <div class="block_right_Google">
+                        <a href="#">Sign in with Google </a>
                     </div>
-                     <div class="block_right_Microsoft">
-                        <a href="#" > Sign in with Microsoft</a>
+                    <div class="block_right_Microsoft">
+                        <a href="#"> Sign in with Microsoft</a>
                     </div>
                 </div>
-                <div class="block_left_popup">
+
+                <div class="left_signUp_registration">
+                    <div class="popup_input_password_registration">
+                        <input class="passwordPopUp_registration" oninput="PasswordRegistrationOnInput()" placeholder="Password" type="password" />
+                        <p class="error_signup_password">Enter a password</p>
+                    </div>
+                    <div class="popup_input_repeat_password">
+                        <input class="repeat_passwordPopUp" oninput="RepeatPasswordRegistrationOnInput()" placeholder="Repeat password" type="password" />
+                        <p class="error_password_repeat">Enter a password</p>
+                    </div>
+
+                    <button onclick="Registration()">Войти</button>
+                </div>
+
+                <div class="block_left_popup_signUp">
                     <div class="popup_input_email">
                         <p>
                             Use your email address
                         </p>
-                        <input class="email_sign_up" oninput="onInputValidationSignup()" placeholder="Email" type="email"/>
-                         <p class="errorEmail">Enter a valid email</p>
+                        <input class="email_sign_up" oninput="onInputValidationSignup()" placeholder="Email" type="email" />
+                        <p class="errorEmail">Enter a valid email</p>
+                        <p class="serverError"></p>
                     </div>
-                    <button onclick="varificationSignUp()">Войти</button>
-                 </div>
+                    <button onclick="SendFormIsUser()">Войти</button>
+                </div>
             </div>
         </div>
     </div>

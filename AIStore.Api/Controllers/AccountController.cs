@@ -48,7 +48,7 @@ namespace AIStore.Web.Controllers.API
             }
             else
             {
-                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                ModelState.AddModelError("LoginError", "Некорректные логин и(или) пароль");
                 return ValidationProblem(ModelState);
             }
         }
@@ -80,8 +80,8 @@ namespace AIStore.Web.Controllers.API
             else
             {
                 ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                return ValidationProblem(ModelState);
             }
-            return Ok();
         }
 
         [AllowAnonymous]
@@ -93,16 +93,17 @@ namespace AIStore.Web.Controllers.API
                 var user = _authService.IsUserLoginExist(model.Login);
                 if (user)
                 {
-                    ModelState.AddModelError("", "логин уже существует");
+                    ModelState.AddModelError("LoginError", "логин уже существует");
                     return ValidationProblem(ModelState);
                 }
             }
             else
             {
-                ModelState.AddModelError("", "Некорректные логин");
+                ModelState.AddModelError("LoginError", "Некорректные логин");
                 return ValidationProblem(ModelState);
             }
-            return Ok();
+            var response = new Dictionary<string, string> { { "status", "200" } };
+            return Ok(response);
         }
 
         private string GenerateJWT(User model)

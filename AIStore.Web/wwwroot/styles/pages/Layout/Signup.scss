@@ -121,9 +121,10 @@
     padding-left: 10px;
 }
 
-.block_left_popup {
+.block_left_popup_signUp {
     width: 50%;
     margin-top: 30px;
+   
 }
 
 .popup_input_email {
@@ -146,7 +147,7 @@
 
 
 
-.block_left_popup button {
+.block_left_popup_signUp button {
     background-color: #e94e53;
     color: #fff;
     border: 3px solid #e94e53;
@@ -166,7 +167,7 @@
     cursor: pointer;
 }
 
-.block_left_popup a {
+.block_left_popup_signUp a {
     display: block;
     font-size: 16px;
     text-decoration: none;
@@ -184,4 +185,69 @@
 
 .error {
     border: 1px solid #ff0000 !important;
+}
+
+.error_signup_password {
+    display: none;
+    color: red;
+    font-size: 14px !important;
+    margin-top: 0px;
+}
+
+.error_password_repeat {
+    display: none;
+    color: red;
+    font-size: 14px !important;
+    margin-top: 0px;
+}
+
+
+.left_signUp_registration {
+    width: 50%;
+    margin-top: 30px;
+    display: none;
+}
+
+.passwordPopUp_registration {
+    height: 38px;
+    width: 330px;
+    border: 1px solid #b7b7b7;
+    border-radius: 5px;
+    color: #333;
+    font-size: 20px;
+    padding-left: 10px;
+    margin-top: 10px;
+}
+
+.left_signUp_registration button {
+    background-color: #e94e53;
+    color: #fff;
+    border: 3px solid #e94e53;
+    transition: padding .3s ease-in-out;
+    position: relative;
+    min-width: 100px;
+    border-radius: 50px;
+    padding: 9px 50px;
+    text-transform: uppercase;
+    text-align: center;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 23px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top:10px;
+}
+
+
+.repeat_passwordPopUp {
+    height: 38px;
+    width: 330px;
+    border: 1px solid #b7b7b7;
+    border-radius: 5px;
+    color: #333;
+    font-size: 20px;
+    padding-left: 10px;
+    margin-top: 10px;
 }
