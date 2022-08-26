@@ -24,8 +24,4 @@ export class CategoryComponent implements OnInit {
       this.isLoading = true;
     });
   }
-
-  public LoadMore() {
-
-  }
 }

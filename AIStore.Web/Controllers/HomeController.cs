@@ -23,7 +23,6 @@ namespace AIStore.Web.Controllers
             return View("index");
         }
 
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
