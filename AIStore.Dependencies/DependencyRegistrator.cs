@@ -1,6 +1,5 @@
 ﻿using AIStore.Dependencies.DependencyModules;
 using Microsoft.Extensions.DependencyInjection;
-using Jironimo.Dependencies.DependencyModules;
 
 namespace AIStore.Dependencies
 {

@@ -1,0 +1,8 @@
+<div>
+  <h1>Category</h1>
+  <div *ngIf="isLoading">
+    <div *ngFor="let item of Categories">
+      <p> {{ item }}</p>
+    </div>
+  </div>
+</div>

@@ -1,21 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MainPageComponent } from 'src/app/mainPage/modules/home/components/mainPage.component';
+import { HomeComponent } from 'src/app/mainPage/modules/home/components/home/home.component';
+import { CategoryComponent } from 'src/app/mainPage/modules/home/components/category/category.component';
 import { RouterModule, Routes } from '@angular/router';
 
 const homeRoutes: Routes = [
-  { path: '', component: MainPageComponent }
+  { path: '', component: HomeComponent }
 ];
 
 @NgModule({
   imports: [
+    CommonModule,
     RouterModule.forChild(homeRoutes),
   ],
   declarations: [
-    MainPageComponent,
+    HomeComponent,
+    CategoryComponent,
   ],
   exports: [
-    MainPageComponent
+    HomeComponent
   ]
 })
 export class mainPageModule { }

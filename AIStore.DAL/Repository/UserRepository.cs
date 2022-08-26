@@ -2,6 +2,7 @@
 using AIStore.Domain.Abstract.Repository;
 using AIStore.Domain.Models.Users;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace AIStore.DAL.Repository
 {
@@ -27,7 +28,7 @@ namespace AIStore.DAL.Repository
 
         public User GetByLogin(string login)
         {
-            var user = _mapper.Map<User>(_context.Users.FirstOrDefault(x => x.Login == login));
+            var user = _mapper.Map<User>(_context.Users.Include(u => u.UserRoles).FirstOrDefault(x => x.Login == login));
 
             return user;
         }

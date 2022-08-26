@@ -25,14 +25,17 @@ function sendFormLogin() {
                 console.log(response.title);
                 return;
             }
-            console.log(response.token);
-            window.localStorage.setItem('token', response.token);
+            var userResponse = {
+                access_token: response.token,
+                refresh_token: "",
+            };
+            document.cookie = encodeURIComponent("auth_user") + '=' + encodeURIComponent(JSON.stringify(userResponse));
             CloseLoginModal();
         });
 }
 
 function Logout() {
-    window.localStorage.removeItem('token', response.token);
+    document.cookie = "auth_user" + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
 }
 
 function varificationFormLogin() {
@@ -193,6 +196,12 @@ function Registration() {
     }).then((response) => {
         console.log(response);
         if (response.status == 200) {
+
+            //var userResponse = {
+            //    access_token: response.token,
+            //    refresh_token: "",
+            //};
+            //document.cookie = encodeURIComponent("auth_user") + '=' + encodeURIComponent(JSON.stringify(userResponse));
             CloseSingUp();
             defaultSignUpPage();
         }

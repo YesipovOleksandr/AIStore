@@ -1,10 +1,10 @@
 ﻿using AIStore.Domain.Concrete;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
 using AIStore.Domain.Abstract.Services;
 using AIStore.Domain.Abstract;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Routing;
 
-namespace Jironimo.Dependencies.DependencyModules
+namespace AIStore.Dependencies.DependencyModules
 {
     public static class RoutesModule
     {

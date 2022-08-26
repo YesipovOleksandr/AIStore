@@ -43,7 +43,6 @@ app.UseHttpsRedirection();
 
 var staticFilesConfigurator = app.Services.GetService<IStaticFilesConfigurator>();
 staticFilesConfigurator.ConfigureStaticPaths(app, app.Environment);
-//app.UseStaticFiles();
 
 app.UseRouting();
 

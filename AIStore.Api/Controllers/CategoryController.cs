@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AIStore.Api.Controllers
 {
@@ -8,10 +9,14 @@ namespace AIStore.Api.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Gets()
         {
+            var userId = User.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var role= User.Claims.Single(c => c.Type == ClaimTypes.Role).Value;
+
+
             var result = new List<string> { "AI", "mobile", "web" };
             return Ok(result);
         }
