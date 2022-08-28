@@ -115,8 +115,8 @@ namespace AIStore.Web.Controllers.API
 
             var claims = new List<Claim>()
             {
-                new Claim(JwtRegisteredClaimNames.Email,model.Login),
-                new Claim(JwtRegisteredClaimNames.Sub,model.Id.ToString())
+                new Claim(ClaimTypes.NameIdentifier,model.Id.ToString()),
+                new Claim(ClaimTypes.Email,model.Login),
             };
 
             foreach (var role in model.UserRoles)

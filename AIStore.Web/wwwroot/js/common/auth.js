@@ -30,7 +30,9 @@ function sendFormLogin() {
                 refresh_token: "",
             };
             document.cookie = encodeURIComponent("auth_user") + '=' + encodeURIComponent(JSON.stringify(userResponse));
+            location.reload();
             CloseLoginModal();
+
         });
 }
 

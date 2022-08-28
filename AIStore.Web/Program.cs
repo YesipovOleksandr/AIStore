@@ -5,6 +5,7 @@ using AIStore.Web.Providers;
 using AIStore.Domain.Abstract;
 using Microsoft.EntityFrameworkCore;
 using AIStore.DAL.Context;
+using AIStore.Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -59,6 +60,8 @@ options.RequestCultureProviders = new[]
       new RouteDataRequestCultureProvider { Options = options }
  };
 app.UseRequestLocalization(options);
+
+app.UseMiddleware<AuthenticationMiddleware>();
 
 app.UseAuthorization();
 

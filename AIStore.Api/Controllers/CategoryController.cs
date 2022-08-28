@@ -17,7 +17,7 @@ namespace AIStore.Api.Controllers
             var role= User.Claims.Single(c => c.Type == ClaimTypes.Role).Value;
 
 
-            var result = new List<string> { "AI", "mobile", "web" };
+            var result = new List<string> { "видеоэффект", "фотоэффект", "аудиоэффект", "работастекстом", "аудиоэффект" };
             return Ok(result);
         }
     }
