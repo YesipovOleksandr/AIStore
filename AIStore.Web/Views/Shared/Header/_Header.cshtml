@@ -21,7 +21,19 @@
             </select>
             @if (User.Identity.IsAuthenticated)
             {
-                @(User.GetUserEmail())
+                <div class="dropdown">
+                    <img class="user_photo" src="https://www.imgonline.com.ua/examples/bee-on-daisy.jpg" />
+                    <div class="dropdown-content">
+                        <ul>
+                            <li>Избраное</li>
+                            <li>Оплата</li>
+                            <li>Исория действий</li>
+                            <li><a href="/settings">Настройки</a></li>
+                            <li>Изменить учетную запись</li>
+                            <li onclick="Logout()">выйти</li>
+                        </ul>
+                    </div>
+                </div>
             }
             else
             {

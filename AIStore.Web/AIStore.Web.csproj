@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Client\src\app\settingsPage\" />
     <Folder Include="Client\src\app\shared\src\app\core\modules\" />
     <Folder Include="wwwroot\fonts\" />
   </ItemGroup>

@@ -10,13 +10,13 @@
       "url": ""
     },
     {
-      "name": "test",
+      "name": "settings",
       "controller": "Home",
-      "action": "Test",
+      "action": "Settings",
       "languages": [
         "en"
       ],
-      "url": "test"
+      "url": "settings"
     }
   ]
 }

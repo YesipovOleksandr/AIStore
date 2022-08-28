@@ -32,12 +32,12 @@ function sendFormLogin() {
             document.cookie = encodeURIComponent("auth_user") + '=' + encodeURIComponent(JSON.stringify(userResponse));
             location.reload();
             CloseLoginModal();
-
         });
 }
 
 function Logout() {
     document.cookie = "auth_user" + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    location.reload();
 }
 
 function varificationFormLogin() {
