@@ -121,7 +121,7 @@ namespace AIStore.Web.Controllers.API
 
             foreach (var role in model.UserRoles)
             {
-                claims.Add(new Claim("role", role.Role.ToString()));
+                claims.Add(new Claim(ClaimTypes.Role, role.Role.ToString()));
             }
 
             var token = new JwtSecurityToken(authParams.Issuer,

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HomeComponent } from 'src/app/mainPage/modules/home/components/home/home.component';
-import { CategoryComponent } from 'src/app/mainPage/modules/home/components/category/category.component';
+import { HomeComponent } from 'src/app/settingsPage/modules/home/components/home/home.component';
 import { RouterModule, Routes } from '@angular/router';
 
 const homeRoutes: Routes = [
@@ -15,10 +14,9 @@ const homeRoutes: Routes = [
   ],
   declarations: [
     HomeComponent,
-    CategoryComponent,
   ],
   exports: [
-    HomeComponent,
+    HomeComponent
   ]
 })
-export class mainPageModule { }
+export class settingsPageModule { }

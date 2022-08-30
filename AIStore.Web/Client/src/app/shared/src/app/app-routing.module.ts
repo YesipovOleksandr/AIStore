@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { mainPageRoutes } from 'src/app/mainPage/mainPage-routing.module';
+import { settingsPageRoutes } from 'src/app/settingsPage/settingsPage-routing.module';
+
 
 
 var routes = [];
 
 (function () {
 
-  var routesToConcat = [mainPageRoutes];
+  var routesToConcat = [mainPageRoutes, settingsPageRoutes];
 
   for (var moduleIndex = 0; moduleIndex < routesToConcat.length; moduleIndex++) {
     for (var routeIndex = 0; routeIndex < routesToConcat[moduleIndex].length; routeIndex++) {
@@ -26,3 +28,4 @@ var routes = [];
 })
 
 export class AppRoutingModule { }
+

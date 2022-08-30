@@ -3,28 +3,25 @@ import { AuthResponseModel } from "../models/authResponse.model";
 import { UserToken } from '../models/user.token';
 import { CookieService } from './cookie.service';
 
-declare var window: any;
-declare var navigator: any;
-
 @Injectable()
 export class AuthService {
   private readonly AuthenticatedUserCookieKey = 'auth_user';
 
   constructor( private cookieService: CookieService) { }
 
-  public setAuthResponseData(resp: AuthResponseModel) {
-    if (resp && resp.access_token) {
-      var isSecure = location.protocol === 'https:';
-      var response = new AuthResponseModel();
-      response.updateData(resp);
-      this.cookieService.remove(this.AuthenticatedUserCookieKey);
-      this.cookieService.set(this.AuthenticatedUserCookieKey, JSON.stringify(response), 1, isSecure);
-    }
-  }
+  //public setAuthResponseData(resp: AuthResponseModel) {
+  //  if (resp && resp.access_token) {
+  //    var isSecure = location.protocol === 'https:';
+  //    var response = new AuthResponseModel();
+  //    response.updateData(resp);
+  //    this.cookieService.remove(this.AuthenticatedUserCookieKey);
+  //    this.cookieService.set(this.AuthenticatedUserCookieKey, JSON.stringify(response), 1, isSecure);
+  //  }
+  //}
 
-  public clearAuthCookies() {
-    this.cookieService.remove(this.AuthenticatedUserCookieKey);
-  }
+  //public clearAuthCookies() {
+  //  this.cookieService.remove(this.AuthenticatedUserCookieKey);
+  //}
 
   public isAuthorized(): boolean {
     var userToken = this.getAuthUser();
@@ -49,6 +46,22 @@ export class AuthService {
     }
 
     return userToken;
+  }
+
+  public getIdUser(): number {
+
+    var user;
+
+    try {
+      user = JSON.parse(this.cookieService.get(this.AuthenticatedUserCookieKey)) as AuthResponseModel;
+    } catch (e) { }
+
+    var id: number;
+    if (user && user.id) {
+      id = user.id;
+    }
+
+    return id || 0;
   }
 
   public getUserEmail(): string {

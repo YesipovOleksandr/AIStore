@@ -18,10 +18,12 @@ export class CategoryComponent implements OnInit {
   private apiService: ApiService) { }
 
   ngOnInit(): void {
-    let accessToken = this.authService.getAuthData().access_token;
-    this.apiService.get(window.clientConfig.environmentconfig.apiurl, "api/Category/", accessToken).subscribe(async next => {
-      this.Categories = next.toString().split(",");
-      this.isLoading = true;
-    });
+    if (this.authService.isAuthorized()) {    
+      let accessToken = this.authService.getAuthData().access_token;
+      this.apiService.get(window.clientConfig.environmentconfig.apiurl, "api/Category/", accessToken).subscribe(async next => {
+        this.Categories = next.toString().split(",");
+        this.isLoading = true;
+      });
+    }
   }
 }

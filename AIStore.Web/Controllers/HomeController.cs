@@ -20,7 +20,7 @@ namespace AIStore.Web.Controllers
         
         public IActionResult Settings()
         {
-            return View("index");
+            return View("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

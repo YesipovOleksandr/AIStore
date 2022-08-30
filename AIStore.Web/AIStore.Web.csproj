@@ -10,6 +10,7 @@
     <None Remove="Client\browserslist" />
     <None Remove="Client\README.md" />
     <None Remove="Client\src\app\mainPage\mainPage-routing.module.ts" />
+    <None Remove="Client\src\app\settingsPage\settingsPage-routing.module.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Client\src\app\settingsPage\" />
     <Folder Include="Client\src\app\shared\src\app\core\modules\" />
     <Folder Include="wwwroot\fonts\" />
   </ItemGroup>
@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="Client\src\app\mainPage\mainPage-routing.module.ts" />
+    <TypeScriptCompile Include="Client\src\app\settingsPage\settingsPage-routing.module.ts" />
   </ItemGroup>
 
 </Project>
