@@ -13,8 +13,8 @@ namespace AIStore.Api.Controllers
         [HttpGet]
         public IActionResult Gets()
         {
-            var userId = User.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var role= User.Claims.Single(c => c.Type == ClaimTypes.Role).Value;
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var role= User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
 
 
             var result = new List<string> { "видеоэффект", "фотоэффект", "аудиоэффект", "работастекстом", "аудиоэффект" };

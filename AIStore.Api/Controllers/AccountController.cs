@@ -19,10 +19,10 @@ namespace AIStore.Web.Controllers.API
         private readonly ITokenService _tokenService;
         private readonly IOptions<AppSettings> _settings;
         private readonly IUserService _userService;
-            
+
         public AccountController(IAuthService authService,
-                                 IMapper mapper, 
-                                 IOptions<AppSettings> settings, 
+                                 IMapper mapper,
+                                 IOptions<AppSettings> settings,
                                  ITokenService tokenService,
                                  IUserService userService)
         {
@@ -70,7 +70,7 @@ namespace AIStore.Web.Controllers.API
                 }
 
                 AuthViewModel result = null;
-              
+
                 result = _mapper.Map<AuthViewModel>(_authService.Authenticate(_mapper.Map<User>(model)));
 
                 if (result == null)
@@ -78,7 +78,7 @@ namespace AIStore.Web.Controllers.API
                     return Unauthorized();
                 }
 
-                return Unauthorized();
+                return Ok(result);
             }
             else
             {
@@ -109,7 +109,6 @@ namespace AIStore.Web.Controllers.API
             return Ok(response);
         }
 
-
         [AllowAnonymous]
         [HttpPost("refresh")]
         public IActionResult Refresh([FromBody] TokenApiModel tokenApiModel)
@@ -128,12 +127,13 @@ namespace AIStore.Web.Controllers.API
             var newAccessToken = _tokenService.GenerateAccessToken(user);
             var newRefreshToken = _tokenService.GenerateRefreshToken();
             user.RefreshToken = newRefreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(7);
             _userService.Update(user);
 
             return new ObjectResult(new
             {
-                Token = newAccessToken,
-                RefreshToken = newRefreshToken
+                access_token = newAccessToken,
+                refresh_token = newRefreshToken
             });
         }
     }

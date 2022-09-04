@@ -46,30 +46,35 @@ namespace AIStore.Web.Middleware
                         var response = await _httpclient.PostAsync("https://localhost:7211/api/Account/refresh", parametrs).ConfigureAwait(false);
                         if (response.StatusCode == HttpStatusCode.OK)
                         {
-                            var a = response.Content;
+                            var responseData = response.Content.ReadAsStringAsync().Result;
+                            var responseJson = JObject.Parse(responseData);
+
+                            json.Property("access_token").Value = responseJson?.SelectToken("access_token")?.ToString();
+                            json.Property("refresh_token").Value = responseJson?.SelectToken("refresh_token")?.ToString();
+                            context.Response.Cookies.Append("auth_user", json.ToString());
                         }
                         else
                         {
-
+                            context.Response.Cookies.Delete("auth_user");
+                            context.Response.Redirect("/");
                         }
-
                     }
 
-                        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(accessToken);
-                        var identity = new ClaimsIdentity(jwt.Claims, "basic");
-                        context.User = new ClaimsPrincipal(identity);
+                    var jwt = new JwtSecurityTokenHandler().ReadJwtToken(accessToken);
+                    var identity = new ClaimsIdentity(jwt.Claims, "basic");
+                    context.User = new ClaimsPrincipal(identity);
 
-                        if (!json.ContainsKey("id"))
-                        {
-                            json.Add("id", context.User.GetId());
-                            json.Add("role", context.User.GetRole().ToString());
-                            json.Add("email", context.User.GetUserEmail());
-                            context.Response.Cookies.Append("auth_user", json.ToString());
-                        }
+                    if (!json.ContainsKey("id"))
+                    {
+                        json.Add("id", context.User.GetId());
+                        json.Add("role", context.User.GetRole().ToString());
+                        json.Add("email", context.User.GetUserEmail());
+                        context.Response.Cookies.Append("auth_user", json.ToString());
                     }
                 }
-
-                await _next(context);
             }
+
+            await _next(context);
         }
     }
+}

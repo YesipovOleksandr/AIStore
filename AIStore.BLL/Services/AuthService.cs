@@ -33,7 +33,7 @@ namespace AIStore.BLL.Services
             }
 
             user.Token = _tokenService.GenerateAccessToken(user);
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+            user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(7);
             user.RefreshToken = _tokenService.GenerateRefreshToken();
 
             _userRepository.Update(user);
