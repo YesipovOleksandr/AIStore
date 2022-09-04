@@ -8,11 +8,13 @@ namespace AIStore.BLL.Services
     public class AuthService: IAuthService
     {
         private readonly IUserRepository _userRepository;
+        private readonly ITokenService _tokenService;
         private readonly IHasher _hasher;
 
-        public AuthService(IUserRepository userRepository, IHasher hasher)
+        public AuthService(IUserRepository userRepository, IHasher hasher, ITokenService tokenService)
         {
             _userRepository = userRepository;
+            _tokenService = tokenService;
             _hasher = hasher;
         }
 
@@ -29,6 +31,12 @@ namespace AIStore.BLL.Services
             {
                 return null;
             }
+
+            user.Token = _tokenService.GenerateAccessToken(user);
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+            user.RefreshToken = _tokenService.GenerateRefreshToken();
+
+            _userRepository.Update(user);
 
             return user;
         }

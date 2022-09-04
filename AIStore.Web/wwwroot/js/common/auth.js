@@ -27,7 +27,8 @@ function sendFormLogin() {
             }
             var userResponse = {
                 access_token: response.token,
-                refresh_token: "",
+                refresh_token: response.refreshToken,
+                expires: response.refreshTokenExpiryTime,
             };
             document.cookie = encodeURIComponent("auth_user") + '=' + encodeURIComponent(JSON.stringify(userResponse));
             location.reload();
@@ -169,7 +170,6 @@ function Registration() {
     let regexPassword = /(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/g;
     let errorPassword = document.querySelector('.error_signup_password');
 
-    console.log(RepeatPassword);
     if (regexPassword.test(password.value) && password.value == RepeatPassword.value) {
         password.classList.remove("error");
         errorPassword.style.display = "none";
@@ -195,19 +195,28 @@ function Registration() {
             password: passwordValue,
             confirmPassword: repeatPasswordValue
         })
-    }).then((response) => {
-        console.log(response);
-        if (response.status == 200) {
+    }).then(response => response.json())
+        .then((response) => {
 
-            //var userResponse = {
-            //    access_token: response.token,
-            //    refresh_token: "",
-            //};
-            //document.cookie = encodeURIComponent("auth_user") + '=' + encodeURIComponent(JSON.stringify(userResponse));
-            CloseSingUp();
-            defaultSignUpPage();
-        }
-    });
+            if (response.status == 401 || response.status == 400) {
+                if (response.errors!== undefined) {
+                    console.log(response.errors['RegisterError'][0]);
+                } else {
+                    console.log(response.title);
+                }
+                return;
+            } else {
+                var userResponse = {
+                    access_token: response.token,
+                    refresh_token: response.refreshToken,
+                    expires: response.refreshTokenExpiryTime,
+                };
+                document.cookie = encodeURIComponent("auth_user") + '=' + encodeURIComponent(JSON.stringify(userResponse));
+                location.reload();
+                CloseSingUp();
+                defaultSignUpPage();
+            }
+        });
 }
 
 function PasswordRegistrationOnInput() {

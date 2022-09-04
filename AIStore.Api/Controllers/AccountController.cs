@@ -1,15 +1,12 @@
 ﻿using AIStore.Api.ViewModels;
 using AIStore.Domain.Abstract.Services;
+using AIStore.Domain.Extensions;
 using AIStore.Domain.Models.Settings;
 using AIStore.Domain.Models.Users;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace AIStore.Web.Controllers.API
 {
@@ -19,13 +16,21 @@ namespace AIStore.Web.Controllers.API
     {
         private readonly IAuthService _authService;
         private readonly IMapper _mapper;
+        private readonly ITokenService _tokenService;
         private readonly IOptions<AppSettings> _settings;
-
-        public AccountController(IAuthService authService, IMapper mapper, IOptions<AppSettings> settings)
+        private readonly IUserService _userService;
+            
+        public AccountController(IAuthService authService,
+                                 IMapper mapper, 
+                                 IOptions<AppSettings> settings, 
+                                 ITokenService tokenService,
+                                 IUserService userService)
         {
             _authService = authService;
             _mapper = mapper;
             _settings = settings;
+            _tokenService = tokenService;
+            _userService = userService;
         }
 
         [AllowAnonymous]
@@ -42,7 +47,6 @@ namespace AIStore.Web.Controllers.API
                 AuthViewModel result = null;
 
                 result = _mapper.Map<AuthViewModel>(user);
-                result.Token = GenerateJWT(user);
 
                 return Ok(result);
             }
@@ -66,20 +70,19 @@ namespace AIStore.Web.Controllers.API
                 }
 
                 AuthViewModel result = null;
-               
+              
                 result = _mapper.Map<AuthViewModel>(_authService.Authenticate(_mapper.Map<User>(model)));
-                result.Token = GenerateJWT(user);
 
                 if (result == null)
                 {
                     return Unauthorized();
                 }
 
-                return Ok(result);
+                return Unauthorized();
             }
             else
             {
-                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                ModelState.AddModelError("RegisterError", "Некорректные логин и(или) пароль");
                 return ValidationProblem(ModelState);
             }
         }
@@ -106,31 +109,32 @@ namespace AIStore.Web.Controllers.API
             return Ok(response);
         }
 
-        private string GenerateJWT(User model)
+
+        [AllowAnonymous]
+        [HttpPost("refresh")]
+        public IActionResult Refresh([FromBody] TokenApiModel tokenApiModel)
         {
-            var authParams = _settings.Value.JWTOptions;
+            if (tokenApiModel is null)
+                return BadRequest("Invalid client request");
+            string accessToken = tokenApiModel.AccessToken;
+            string refreshToken = tokenApiModel.RefreshToken;
+            var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
+            var userId = principal.GetId();
+            if (userId == null)
+                return BadRequest("Invalid client request");
+            var user = _userService.GetById(userId.Value);
+            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+                return BadRequest("Invalid client request");
+            var newAccessToken = _tokenService.GenerateAccessToken(user);
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
+            user.RefreshToken = newRefreshToken;
+            _userService.Update(user);
 
-            var securityKey = authParams.Secret;
-            var credentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(securityKey)), SecurityAlgorithms.HmacSha256);
-
-            var claims = new List<Claim>()
+            return new ObjectResult(new
             {
-                new Claim(ClaimTypes.NameIdentifier,model.Id.ToString()),
-                new Claim(ClaimTypes.Email,model.Login),
-            };
-
-            foreach (var role in model.UserRoles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role.Role.ToString()));
-            }
-
-            var token = new JwtSecurityToken(authParams.Issuer,
-                authParams.Audience,
-                claims,
-                expires: DateTime.Now.AddSeconds(authParams.TokenLifeTime),
-                signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+                Token = newAccessToken,
+                RefreshToken = newRefreshToken
+            });
         }
     }
 }

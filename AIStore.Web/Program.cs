@@ -21,6 +21,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddControllersWithViews();
 builder.Services.RegisterDependencyModules();
 
+builder.Services.AddHttpClient();
+
 builder.Services.AddAutoMapper(typeof(WebMappingProfile));
 
 builder.Services.MapSettings(configuration);

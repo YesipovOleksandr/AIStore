@@ -17,13 +17,18 @@ namespace AIStore.DAL.Repository
             _mapper = mapper;
         }
 
-        public User Create(User user)
+        public User Create(User item)
         {
-            var newUser = _mapper.Map<Entities.User>(user);
+            var newUser = _mapper.Map<Entities.User>(item);
             _context.Add(newUser);
             _context.SaveChanges();
 
             return _mapper.Map<User>(newUser);
+        }
+        public User GetById(long Id)
+        {
+            var user = _mapper.Map<User>(_context.Users.Include(u => u.UserRoles).FirstOrDefault(x => x.Id == Id));
+            return user;
         }
 
         public User GetByLogin(string login)
@@ -31,6 +36,38 @@ namespace AIStore.DAL.Repository
             var user = _mapper.Map<User>(_context.Users.Include(u => u.UserRoles).FirstOrDefault(x => x.Login == login));
 
             return user;
+        }
+
+        public void Update(User item)
+        {
+            _context.Database.ExecuteSqlRaw(@"UPDATE Users SET  
+            Login={1}, Password={2},RefreshToken={3},RefreshTokenExpiryTime={4}
+            WHERE Id={0}",
+          item.Id, item.Login, item.Password, item.RefreshToken, item.RefreshTokenExpiryTime);
+        }
+        public void Save()
+        {
+            _context.SaveChanges();
+        }
+
+        private bool disposed = false;
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
