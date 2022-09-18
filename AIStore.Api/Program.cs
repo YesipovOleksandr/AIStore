@@ -33,6 +33,10 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddGoogle(googleOptions =>
+{
+    googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
+    googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
 }).AddJwtBearer(options =>
 {
     options.SaveToken = true;
@@ -59,10 +63,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(x => x
-           .AllowAnyOrigin()
-           .AllowAnyMethod()
-           .AllowAnyHeader());
+app.UseCors(builder => builder.WithOrigins("*")
+                               .AllowAnyMethod()
+                               .AllowAnyHeader());
 
 app.UseHttpsRedirection();
 

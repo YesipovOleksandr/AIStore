@@ -6,7 +6,9 @@ using AIStore.Domain.Models.Users;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
+using System.Web;
 
 namespace AIStore.Web.Controllers.API
 {
@@ -19,11 +21,13 @@ namespace AIStore.Web.Controllers.API
         private readonly ITokenService _tokenService;
         private readonly IOptions<AppSettings> _settings;
         private readonly IUserService _userService;
+        private readonly IAuthExternalService _authExternalService;
 
         public AccountController(IAuthService authService,
                                  IMapper mapper,
                                  IOptions<AppSettings> settings,
                                  ITokenService tokenService,
+                                 IAuthExternalService authExternalService,
                                  IUserService userService)
         {
             _authService = authService;
@@ -31,6 +35,7 @@ namespace AIStore.Web.Controllers.API
             _settings = settings;
             _tokenService = tokenService;
             _userService = userService;
+            _authExternalService = authExternalService;
         }
 
         [AllowAnonymous]
@@ -135,6 +140,36 @@ namespace AIStore.Web.Controllers.API
                 access_token = newAccessToken,
                 refresh_token = newRefreshToken
             });
+        }
+
+        [AllowAnonymous]
+        [HttpGet("external/login")]
+        public IActionResult GoogleLogin(string provider)
+        {
+            var url = _authExternalService.GetAuthenticationUrl(provider);
+            return Redirect(url);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("external/callback")]
+        public async Task<IActionResult> ExternaLoginCallback(string state, CancellationToken cancellationToken, string? code = null)
+        {
+            var provider = state;
+            var token = await _authExternalService.ExternalTokenAsync(code,provider);
+
+            if (object.Equals(token, null))
+                return BadRequest("Token is undefined");
+
+            var profile = await _authExternalService.ProfileAsync(token, provider);
+
+            if (object.Equals(profile, null))
+                return BadRequest("Your email is required to complete the sign-in process. Profile is null.");
+
+            if (string.IsNullOrEmpty(profile.Email))
+                return BadRequest("Your email is required to complete the sign-in process. Email is empty.");
+
+
+            return Ok();
         }
     }
 }

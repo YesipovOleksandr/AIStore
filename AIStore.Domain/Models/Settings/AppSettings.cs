@@ -6,5 +6,6 @@ namespace AIStore.Domain.Models.Settings
     {
         public ClientConfig ClientConfig { get; set; }
         public JWTOptions JWTOptions { get; set; }
+        public AuthenticationsConfig AuthenticationsConfig { get; set; }
     }
 }

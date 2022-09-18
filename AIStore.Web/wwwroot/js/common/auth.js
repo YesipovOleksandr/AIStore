@@ -1,4 +1,34 @@
-﻿
+﻿console.log(window.clientConfig.environmentconfig.apiurl);
+
+function externalAuth(providerValue) {
+    var windowSize = { width: 800, height: 600 };
+    var width = window.innerWidth
+        ? window.innerWidth
+        : document.documentElement.clientWidth
+            ? document.documentElement.clientWidth
+            : screen.width;
+    var height = window.innerHeight
+        ? window.innerHeight
+        : document.documentElement.clientHeight
+            ? document.documentElement.clientHeight
+            : screen.height;
+    var settings = {
+        scrollbars: 'yes',
+        height: windowSize.height,
+        width: windowSize.width,
+        top: ((height / 2) - (windowSize.height / 2)) + window.screenTop,
+        left: ((width / 2) - (windowSize.width / 2)) + window.screenLeft
+    };
+    var windowSettings = [];
+    Object.keys(settings).forEach(function (key) {
+        windowSettings.push(key + "=" + settings[key]);
+    });
+    var joinedWindowSettings = windowSettings.join(', ');
+    var externalAuthUrl = window.clientConfig.environmentconfig.apiurl + `api/Account/external/login?provider=${providerValue}`;
+    return window.open(externalAuthUrl, '', joinedWindowSettings);
+}
+
+
 function sendFormLogin() {
     let isvalidate = varificationFormLogin();
     if (isvalidate == false) {
@@ -199,7 +229,7 @@ function Registration() {
         .then((response) => {
 
             if (response.status == 401 || response.status == 400) {
-                if (response.errors!== undefined) {
+                if (response.errors !== undefined) {
                     console.log(response.errors['RegisterError'][0]);
                 } else {
                     console.log(response.title);

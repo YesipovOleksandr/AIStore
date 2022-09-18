@@ -19,6 +19,11 @@ namespace AIStore.Dependencies
             {
                 settings.JWTOptions = configuration.GetSection("JWT").Get<JWTOptions>();
             });
+
+            services.Configure<AppSettings>(settings =>
+            {
+                settings.AuthenticationsConfig = configuration.GetSection("Authentication").Get<AuthenticationsConfig>();
+            });
         }
     }
 }

@@ -15,9 +15,6 @@ export class ApiService {
       headers['Authorization'] = "Bearer " + accessToken;
     }
 
-    //headers['Access-Control-Allow-Origin'] = '*';
-    //headers['Content-Type'] = 'application/json';
-    //headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
 
 
     return this.http.get<T>(`${baseUrl}${resource}`, { headers, withCredentials: false });

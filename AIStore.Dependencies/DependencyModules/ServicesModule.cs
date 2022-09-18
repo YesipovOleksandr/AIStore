@@ -13,10 +13,11 @@ namespace AIStore.Dependencies.DependencyModules
             services.AddHttpContextAccessor();
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAuthExternalService, AuthExternalService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserService, UserService>();          
+            services.AddScoped<IUserService, UserService>();           
         }
     }
 }
