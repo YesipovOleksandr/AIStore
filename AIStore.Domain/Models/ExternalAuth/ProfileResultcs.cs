@@ -52,4 +52,47 @@ namespace AIStore.Domain.Models.ExternalAuth
         [JsonProperty("last_name")]
         public string LastName { get; set; }
     }
+
+    public class LinkedinProfileResult : BaseProfileResult
+    {
+        public class LastNameItem
+        {
+            [JsonProperty("localized")]
+            public localized localized { get; set; }
+        }
+
+        public class FirstNameItem
+        {
+            [JsonProperty("localized")]
+            public localized localized { get; set; }
+        }
+
+        public class localized
+        {
+            [JsonProperty("ru_RU")]
+            public string lang { get; set; }
+        }
+
+        public class ElementsItem
+        {
+            [JsonProperty("handle~")]
+            public handle handle { get; set; }
+        }
+
+        public class handle
+        {
+            [JsonProperty("emailAddress")]
+            public string emailAddress { get; set; }
+        }
+
+        [JsonProperty("elements")]
+        public List<ElementsItem> Elements { get; set; }
+
+        [JsonProperty("firstName")]
+        public FirstNameItem FirstName { get; set; }
+
+        [JsonProperty("lastName")]
+        public LastNameItem LastName { get; set; }
+    }
+
 }

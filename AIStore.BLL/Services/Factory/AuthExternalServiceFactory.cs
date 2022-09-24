@@ -21,6 +21,10 @@ namespace AIStore.BLL.Services.Factory
             if ("facebook".Equals(provider))
                 return new FacebookService(settings);
 
+            if ("linkedin".Equals(provider))
+                return new LinkedinService(settings);
+           
+
             return null;
         }
     }

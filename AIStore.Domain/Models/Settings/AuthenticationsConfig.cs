@@ -10,5 +10,7 @@ namespace AIStore.Domain.Models.Settings
     {
         public Google Google { get; set; }
         public Facebook Facebook { get; set; }
+        public Linkedin Linkedin { get; set; }
+        
     }
 }
