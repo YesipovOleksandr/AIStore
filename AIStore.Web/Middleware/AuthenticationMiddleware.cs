@@ -1,4 +1,7 @@
 ﻿using AIStore.Domain.Extensions;
+using AIStore.Domain.Models.Settings;
+using AIStore.Domain.Models.Settings.ClientConfigs;
+using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -13,11 +16,15 @@ namespace AIStore.Web.Middleware
     {
         private readonly HttpClient _httpclient;
         private readonly RequestDelegate _next;
+        private readonly IOptions<AppSettings> _appSettings;
 
-        public AuthenticationMiddleware(RequestDelegate next, HttpClient httpclient)
+        public AuthenticationMiddleware(RequestDelegate next,
+                                        HttpClient httpclient,
+                                         IOptions<AppSettings> appSettings)
         {
             _next = next;
             _httpclient = httpclient;
+            _appSettings = appSettings;
         }
 
         public class TokenModel
@@ -43,7 +50,7 @@ namespace AIStore.Web.Middleware
                     {
                         var tokenModul = new TokenModel { AccessToken = accessToken, RefreshToken = refreshToken };
                         var parametrs = new StringContent(JsonConvert.SerializeObject(tokenModul), Encoding.UTF8, "application/json");
-                        var response = await _httpclient.PostAsync("https://localhost:7211/api/Account/refresh", parametrs).ConfigureAwait(false);
+                        var response = await _httpclient.PostAsync(_appSettings.Value.ClientConfig.EnvironmentConfig.ApiUrl + "api/Account/refresh", parametrs).ConfigureAwait(false);
                         if (response.StatusCode == HttpStatusCode.OK)
                         {
                             var responseData = response.Content.ReadAsStringAsync().Result;

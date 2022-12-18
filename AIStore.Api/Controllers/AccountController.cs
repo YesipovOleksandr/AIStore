@@ -6,9 +6,7 @@ using AIStore.Domain.Models.Users;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
-using System.Web;
 
 namespace AIStore.Web.Controllers.API
 {
@@ -132,7 +130,7 @@ namespace AIStore.Web.Controllers.API
             var newAccessToken = _tokenService.GenerateAccessToken(user);
             var newRefreshToken = _tokenService.GenerateRefreshToken();
             user.RefreshToken = newRefreshToken;
-            user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(7);
+            user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(_settings.Value.JWTOptions.TokenLongLifeTime);
             _userService.Update(user);
 
             return new ObjectResult(new

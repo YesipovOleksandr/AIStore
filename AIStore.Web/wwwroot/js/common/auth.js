@@ -1,6 +1,4 @@
-﻿console.log(window.clientConfig.environmentconfig.apiurl);
-
-function externalAuth(providerValue) {
+﻿function externalAuth(providerValue) {
     var windowSize = { width: 800, height: 600 };
     var width = window.innerWidth
         ? window.innerWidth

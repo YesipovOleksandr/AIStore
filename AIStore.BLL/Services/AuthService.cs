@@ -1,7 +1,9 @@
 ﻿using AIStore.Domain.Abstract.Repository;
 using AIStore.Domain.Abstract.Services;
 using AIStore.Domain.Enums;
+using AIStore.Domain.Models.Settings;
 using AIStore.Domain.Models.Users;
+using Microsoft.Extensions.Options;
 
 namespace AIStore.BLL.Services
 {
@@ -10,12 +12,17 @@ namespace AIStore.BLL.Services
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
         private readonly IHasher _hasher;
+        private readonly IOptions<AppSettings> _settings;
 
-        public AuthService(IUserRepository userRepository, IHasher hasher, ITokenService tokenService)
+        public AuthService(IUserRepository userRepository,
+                           IHasher hasher,
+                           ITokenService tokenService,
+                           IOptions<AppSettings> settings)
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
             _hasher = hasher;
+            _settings = settings;
         }
 
         public User Authenticate(User model)
@@ -33,7 +40,7 @@ namespace AIStore.BLL.Services
             }
 
             user.Token = _tokenService.GenerateAccessToken(user);
-            user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(7);
+            user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(_settings.Value.JWTOptions.TokenLongLifeTime);
             user.RefreshToken = _tokenService.GenerateRefreshToken();
 
             _userRepository.Update(user);
