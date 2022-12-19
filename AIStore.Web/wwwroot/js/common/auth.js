@@ -1,31 +1,35 @@
-﻿function externalAuth(providerValue) {
-    var windowSize = { width: 800, height: 600 };
-    var width = window.innerWidth
-        ? window.innerWidth
-        : document.documentElement.clientWidth
-            ? document.documentElement.clientWidth
-            : screen.width;
-    var height = window.innerHeight
-        ? window.innerHeight
-        : document.documentElement.clientHeight
-            ? document.documentElement.clientHeight
-            : screen.height;
-    var settings = {
-        scrollbars: 'yes',
-        height: windowSize.height,
-        width: windowSize.width,
-        top: ((height / 2) - (windowSize.height / 2)) + window.screenTop,
-        left: ((width / 2) - (windowSize.width / 2)) + window.screenLeft
-    };
-    var windowSettings = [];
-    Object.keys(settings).forEach(function (key) {
-        windowSettings.push(key + "=" + settings[key]);
-    });
-    var joinedWindowSettings = windowSettings.join(', ');
+﻿var _authCookieName = "auth_user";
+
+function externalAuth(providerValue) {
     var externalAuthUrl = window.clientConfig.environmentconfig.apiurl + `api/Account/external/login?provider=${providerValue}`;
-    return window.open(externalAuthUrl, '', joinedWindowSettings);
+    location.href = externalAuthUrl;
 }
 
+function isAuthorized() {
+    return getCookie(_authCookieName) != null;
+};
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+function AddCookieAuth(response) {
+    var userResponse = {
+        access_token: response.token,
+        refresh_token: response.refreshToken,
+        expires: response.refreshTokenExpiryTime,
+    };
+    document.cookie = encodeURIComponent(_authCookieName) + '=' + encodeURIComponent(JSON.stringify(userResponse));
+    location.reload();
+    CloseLoginModal();
+}
+
+function Logout() {
+    document.cookie = _authCookieName + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    location.reload();
+}
 
 function sendFormLogin() {
     let isvalidate = varificationFormLogin();
@@ -53,20 +57,8 @@ function sendFormLogin() {
                 console.log(response.title);
                 return;
             }
-            var userResponse = {
-                access_token: response.token,
-                refresh_token: response.refreshToken,
-                expires: response.refreshTokenExpiryTime,
-            };
-            document.cookie = encodeURIComponent("auth_user") + '=' + encodeURIComponent(JSON.stringify(userResponse));
-            location.reload();
-            CloseLoginModal();
+            AddCookieAuth(response);
         });
-}
-
-function Logout() {
-    document.cookie = "auth_user" + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    location.reload();
 }
 
 function varificationFormLogin() {
@@ -239,7 +231,7 @@ function Registration() {
                     refresh_token: response.refreshToken,
                     expires: response.refreshTokenExpiryTime,
                 };
-                document.cookie = encodeURIComponent("auth_user") + '=' + encodeURIComponent(JSON.stringify(userResponse));
+                document.cookie = encodeURIComponent(_authCookieName) + '=' + encodeURIComponent(JSON.stringify(userResponse));
                 location.reload();
                 CloseSingUp();
                 defaultSignUpPage();

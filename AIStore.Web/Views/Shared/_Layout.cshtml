@@ -12,15 +12,18 @@
     @RenderSection("Styles", false)
 </head>
 <body>
-    @await Html.PartialAsync("/Views/Shared/Header/_Header.cshtml")
+    @await Html.PartialAsync("~/Views/Shared/Header/_Header.cshtml")
+    @await Html.PartialAsync("~/Views/Shared/Components/google-one-tap.component.cshtml")
     <main>
         @RenderBody()
     </main>
     @await Html.PartialAsync("~/Views/Shared/Footers/_Footer.cshtml")
     @await Html.PartialAsync("~/Views/Shared/Pop-up/_Login.cshtml")
     @await Html.PartialAsync("~/Views/Shared/Pop-up/_Signup.cshtml")
+    <script src="/template/dist/js/Common/scriptService-min.js" asp-append-version="true"></script>
+    <script src="/template/dist/js/Common/googleOneTap-min.js" asp-append-version="true"></script>
     <script src="/template/dist/js/Common/pop-up-min.js" asp-append-version="true"></script>
-     <script src="/template/dist/js/Common/auth-min.js" asp-append-version="true"></script>
+    <script src="/template/dist/js/Common/auth-min.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

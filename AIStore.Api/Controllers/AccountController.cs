@@ -1,12 +1,15 @@
 ﻿using AIStore.Api.ViewModels;
 using AIStore.Domain.Abstract.Services;
 using AIStore.Domain.Extensions;
+using AIStore.Domain.Models.ExternalAuth;
 using AIStore.Domain.Models.Settings;
 using AIStore.Domain.Models.Users;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Text.Json;
+using System.Web;
 
 namespace AIStore.Web.Controllers.API
 {
@@ -166,8 +169,48 @@ namespace AIStore.Web.Controllers.API
             if (string.IsNullOrEmpty(profile.Email))
                 return BadRequest("Your email is required to complete the sign-in process. Email is empty.");
 
+            var user = new User { Login = profile.Email };
+            user.UserRoles = new List<UserRoles>();
+            user.Token = _tokenService.GenerateAccessToken(user);
+            user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(_settings.Value.JWTOptions.TokenLongLifeTime);
+            user.RefreshToken = _tokenService.GenerateRefreshToken();
 
-            return Ok();
+            var dict = HttpUtility.ParseQueryString($"access_token={user.Token}&refresh_token={user.RefreshToken}&expires={user.RefreshTokenExpiryTime}");
+            var json = JsonSerializer.Serialize(
+                                dict.AllKeys.ToDictionary(k => k, k => dict[k]));
+
+            Response.Cookies.Append("auth_user", json);
+            return Redirect(_settings.Value.ClientConfig.EnvironmentConfig.BaseUrl);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("external/google-token")]
+        public async Task<IActionResult> GoogleToken()
+        {
+            var authorization = Request.Headers.Authorization;
+
+            if (object.Equals(authorization, null))
+                return BadRequest($"{nameof(Request.Headers.Authorization)} header is required to complete the sign-in process. {nameof(Request.Headers.Authorization)} is undefined");
+
+            var profile = await _authExternalService.GoogleOneTapProfileAsync(authorization);
+
+            if (object.Equals(profile, null))
+                return BadRequest("Your email is required to complete the sign-in process. Profile is null.");
+
+            if (string.IsNullOrEmpty(profile.Email))
+                return BadRequest("Your email is required to complete the sign-in process. Email is empty.");
+
+            var user = new User { Login = profile.Email };
+            user.UserRoles = new List<UserRoles>();
+            user.Token = _tokenService.GenerateAccessToken(user);
+            user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(_settings.Value.JWTOptions.TokenLongLifeTime);
+            user.RefreshToken = _tokenService.GenerateRefreshToken();
+
+            AuthViewModel result = null;
+
+            result = _mapper.Map<AuthViewModel>(user);
+
+            return Ok(result);
         }
     }
 }

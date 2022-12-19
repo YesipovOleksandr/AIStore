@@ -6,6 +6,7 @@ namespace AIStore.Domain.Abstract.Services
     {
         Task<TokenResult> ExternalTokenAsync(string code,string provider);
         Task<ProfileResult> ProfileAsync(TokenResult token,string provider);
+        Task<ProfileResult> GoogleOneTapProfileAsync(string id_token);
         string GetAuthenticationUrl(string provider);
     }
 }
