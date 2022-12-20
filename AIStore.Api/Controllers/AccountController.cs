@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System.Text.Json;
 using System.Web;
 
@@ -132,14 +133,16 @@ namespace AIStore.Web.Controllers.API
                 return BadRequest("Invalid client request");
             var newAccessToken = _tokenService.GenerateAccessToken(user);
             var newRefreshToken = _tokenService.GenerateRefreshToken();
+            var newExpires= DateTime.Now.AddMinutes(_settings.Value.JWTOptions.TokenLongLifeTime);
             user.RefreshToken = newRefreshToken;
-            user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(_settings.Value.JWTOptions.TokenLongLifeTime);
+            user.RefreshTokenExpiryTime = newExpires;
             _userService.Update(user);
 
-            return new ObjectResult(new
+            return Ok( new TokenResult
             {
-                access_token = newAccessToken,
-                refresh_token = newRefreshToken
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken,
+                Expires= newExpires
             });
         }
 
@@ -173,13 +176,14 @@ namespace AIStore.Web.Controllers.API
             user.UserRoles = new List<UserRoles>();
             user.Token = _tokenService.GenerateAccessToken(user);
             user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(_settings.Value.JWTOptions.TokenLongLifeTime);
-            user.RefreshToken = _tokenService.GenerateRefreshToken();
+            user.RefreshToken = _tokenService.GenerateRefreshToken();;
 
-            var dict = HttpUtility.ParseQueryString($"access_token={user.Token}&refresh_token={user.RefreshToken}&expires={user.RefreshTokenExpiryTime}");
-            var json = JsonSerializer.Serialize(
-                                dict.AllKeys.ToDictionary(k => k, k => dict[k]));
-
-            Response.Cookies.Append("auth_user", json);
+            var tokenResult = new TokenResult { AccessToken=user.Token,
+                                               RefreshToken=user.RefreshToken ,
+                                               Expires= user.RefreshTokenExpiryTime };
+            var json = JsonConvert.SerializeObject(tokenResult, Formatting.Indented);
+            var cookieName = _settings.Value.JWTOptions.CookieName;
+            Response.Cookies.Append(cookieName, json);
             return Redirect(_settings.Value.ClientConfig.EnvironmentConfig.BaseUrl);
         }
 

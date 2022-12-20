@@ -49,10 +49,10 @@ namespace AIStore.BLL.Services.Factory.Service
 
             query.Add("client_id", _settings.AuthenticationsConfig.Facebook.ClientId);
             query.Add("redirect_uri", redirectUrl);
-            query.Add("scope", _settings.AuthenticationsConfig.Facebook.Scope);
-            query.Add("auth_type", "reauthenticate");//rerequest
+            //query.Add("scope", _settings.AuthenticationsConfig.Facebook.Scope);
+            //query.Add("auth_type", "reauthenticate");//rerequest
             query.Add("state", provider);
-            query.Add("display", "popup");
+            //query.Add("display", "popup");
 
             return "https://www.facebook.com/dialog/oauth/?" + query.ToString();
         }

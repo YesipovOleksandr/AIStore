@@ -9,5 +9,8 @@ namespace AIStore.Domain.Models.ExternalAuth
 
         [JsonProperty("refresh_token")]
         public string RefreshToken { get; set; }
+
+        [JsonProperty("expires")]
+        public DateTime Expires { get; set; }
     }
 }

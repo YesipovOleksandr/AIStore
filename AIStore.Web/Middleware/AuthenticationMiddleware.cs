@@ -42,6 +42,7 @@ namespace AIStore.Web.Middleware
                 var json = JObject.Parse(auth_user);
                 var accessToken = json?.SelectToken("access_token")?.ToString();
                 var refreshToken = json?.SelectToken("refresh_token")?.ToString();
+                var expires= json?.SelectToken("expires")?.ToString();
 
                 if (!String.IsNullOrWhiteSpace(accessToken))
                 {

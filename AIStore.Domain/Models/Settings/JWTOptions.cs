@@ -7,5 +7,6 @@
         public string Secret { get; set; }
         public int TokenLongLifeTime { get; set; }
         public int TokenLifeTime { get; set; }
+        public string CookieName { get; set; }
     }
 }

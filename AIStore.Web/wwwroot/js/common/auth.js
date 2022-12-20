@@ -1,5 +1,40 @@
 ﻿var _authCookieName = "auth_user";
 
+if (document.readyState !== 'loading') {
+    addBlockSpinner();
+} else {
+    document.addEventListener('DOMContentLoaded', function () {
+        addBlockSpinner();
+    });
+}
+
+//spinner
+function addBlockSpinner() {
+    var spinnerContainer = document.createElement('div');
+    spinnerContainer.classList.add('spinner-border');
+    spinnerContainer.style.display = "none";
+    var spinner = document.createElement('div');
+    spinner.classList.add('spinner');
+    spinnerContainer.appendChild(spinner);
+    hideSpinner();
+    document.body.appendChild(spinnerContainer);
+}
+
+function showSpinner() {
+    let spinnerContainer = document.querySelector('.spinner-border');
+    if (typeof (spinnerContainer) != 'undefined' && spinnerContainer != null) {
+        spinnerContainer.style.display = "block";
+    }
+}
+
+function hideSpinner() {
+    let spinnerContainer = document.querySelector('.spinner-border');
+    if (typeof (spinnerContainer) != 'undefined' && spinnerContainer != null) {
+        spinnerContainer.style.display = "none";
+    }
+}
+
+
 function externalAuth(providerValue) {
     var externalAuthUrl = window.clientConfig.environmentconfig.apiurl + `api/Account/external/login?provider=${providerValue}`;
     location.href = externalAuthUrl;
@@ -23,7 +58,6 @@ function AddCookieAuth(response) {
     };
     document.cookie = encodeURIComponent(_authCookieName) + '=' + encodeURIComponent(JSON.stringify(userResponse));
     location.reload();
-    CloseLoginModal();
 }
 
 function Logout() {
@@ -32,8 +66,10 @@ function Logout() {
 }
 
 function sendFormLogin() {
+    showSpinner();
     let isvalidate = varificationFormLogin();
     if (isvalidate == false) {
+        hideSpinner();
         return;
     }
     let login = document.querySelector('.emailPopUp');
@@ -55,6 +91,7 @@ function sendFormLogin() {
         .then((response) => {
             if (response.status == 401) {
                 console.log(response.title);
+                hideSpinner();
                 return;
             }
             AddCookieAuth(response);
@@ -143,8 +180,10 @@ function onInputValidationSignup() {
 }
 
 function SendFormIsUser() {
+    showSpinner();
     let isValidate = varificationSignUp();
     if (isValidate == false) {
+        hideSpinner();
         return;
     }
     let loginVal = document.querySelector('.email_sign_up').value;
@@ -160,12 +199,14 @@ function SendFormIsUser() {
     }).then((res) => res.json())
         .then((response) => {
             if (response.status == 200) {
+                hideSpinner();
                 movingOnSignUp();
             }
             else {
                 let textError = response.errors['LoginError'][0];
                 let serverError = document.querySelector('.serverError');
                 serverError.innerHTML = textError;
+                hideSpinner();
             }
         });
 }
@@ -185,6 +226,7 @@ function defaultSignUpPage() {
 }
 
 function Registration() {
+    showSpinner();
     let password = document.querySelector('.passwordPopUp_registration');
     let RepeatPassword = document.querySelector('.repeat_passwordPopUp');
     let regexPassword = /(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/g;
@@ -197,6 +239,7 @@ function Registration() {
     else {
         password.classList.add("error");
         errorPassword.style.display = "block";
+        hideSpinner();
         return;
     }
 
@@ -224,6 +267,7 @@ function Registration() {
                 } else {
                     console.log(response.title);
                 }
+                hideSpinner();
                 return;
             } else {
                 var userResponse = {
