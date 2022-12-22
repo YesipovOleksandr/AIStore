@@ -52,10 +52,9 @@ namespace AIStore.BLL.Services.Factory.Service
             var oAuthServerEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
 
             var ClientId = _settings.AuthenticationsConfig.Google.ClientId;
-            var scope = "email profile";
             var queryParams = new Dictionary<string, string>
             {
-                {"scope",scope },
+                {"scope",_settings.AuthenticationsConfig.Google.Scope  },
                 {"client_id",ClientId },
                 {"redirect_uri",redirectUrl },
                 {"response_type","code" },

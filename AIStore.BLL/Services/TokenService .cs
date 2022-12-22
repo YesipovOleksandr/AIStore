@@ -33,6 +33,7 @@ namespace AIStore.BLL.Services
             {
                 new Claim(ClaimTypes.NameIdentifier,model.Id.ToString()),
                 new Claim(ClaimTypes.Email,model.Login),
+                new Claim("EmaillConfirm",model.IsEmailСonfirm.ToString())
             };
 
             foreach (var role in model.UserRoles)

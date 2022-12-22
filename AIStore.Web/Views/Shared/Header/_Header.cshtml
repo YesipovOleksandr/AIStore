@@ -24,6 +24,11 @@
                 <div class="dropdown">
                     <img class="user_photo" src="https://www.imgonline.com.ua/examples/bee-on-daisy.jpg" />
                     <div class="dropdown-content">
+                        <h3>@User.GetUserEmail()</h3> 
+                        @if (!User.IsEmailConfirm())
+                        {
+                           <p style="color:red;">not confirm Email</p>
+                        }
                         <ul>
                             <li>Избраное</li>
                             <li>Оплата</li>

@@ -54,6 +54,7 @@ namespace AIStore.BLL.Services
             {
                 Login = user.Login,
                 Password = _hasher.GetHash(user.Password),
+                IsEmailСonfirm = user.IsEmailСonfirm,
                 UserRoles=new List<UserRoles> { new UserRoles { User = user, Role = Role.User } }
             };
 

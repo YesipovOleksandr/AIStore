@@ -133,16 +133,16 @@ namespace AIStore.Web.Controllers.API
                 return BadRequest("Invalid client request");
             var newAccessToken = _tokenService.GenerateAccessToken(user);
             var newRefreshToken = _tokenService.GenerateRefreshToken();
-            var newExpires= DateTime.Now.AddMinutes(_settings.Value.JWTOptions.TokenLongLifeTime);
+            var newExpires = DateTime.Now.AddMinutes(_settings.Value.JWTOptions.TokenLongLifeTime);
             user.RefreshToken = newRefreshToken;
             user.RefreshTokenExpiryTime = newExpires;
             _userService.Update(user);
 
-            return Ok( new TokenResult
+            return Ok(new TokenResult
             {
                 AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken,
-                Expires= newExpires
+                Expires = newExpires
             });
         }
 
@@ -159,7 +159,7 @@ namespace AIStore.Web.Controllers.API
         public async Task<IActionResult> ExternaLoginCallback(string state, CancellationToken cancellationToken, string? code = null)
         {
             var provider = state;
-            var token = await _authExternalService.ExternalTokenAsync(code,provider);
+            var token = await _authExternalService.ExternalTokenAsync(code, provider);
 
             if (object.Equals(token, null))
                 return BadRequest("Token is undefined");
@@ -172,15 +172,26 @@ namespace AIStore.Web.Controllers.API
             if (string.IsNullOrEmpty(profile.Email))
                 return BadRequest("Your email is required to complete the sign-in process. Email is empty.");
 
-            var user = new User { Login = profile.Email };
-            user.UserRoles = new List<UserRoles>();
-            user.Token = _tokenService.GenerateAccessToken(user);
-            user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(_settings.Value.JWTOptions.TokenLongLifeTime);
-            user.RefreshToken = _tokenService.GenerateRefreshToken();;
+            var newPassword = "thirdPartylogin";
+            var user = new User { Login = profile.Email, IsEmailСonfirm = true, Password = newPassword };
+            if (!_authService.IsUserLoginExist(user.Login))
+            {
+                user = _authService.Registration(_mapper.Map<User>(user));
+                user.Password = newPassword;
+                if (user == null)
+                {
+                    return BadRequest();
+                }
+            }
 
-            var tokenResult = new TokenResult { AccessToken=user.Token,
-                                               RefreshToken=user.RefreshToken ,
-                                               Expires= user.RefreshTokenExpiryTime };
+            var result = _authService.Authenticate(_mapper.Map<User>(user));
+
+            var tokenResult = new TokenResult
+            {
+                AccessToken = result.Token,
+                RefreshToken = result.RefreshToken,
+                Expires = result.RefreshTokenExpiryTime
+            };
             var json = JsonConvert.SerializeObject(tokenResult, Formatting.Indented);
             var cookieName = _settings.Value.JWTOptions.CookieName;
             Response.Cookies.Append(cookieName, json);

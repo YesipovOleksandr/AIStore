@@ -19,6 +19,10 @@ namespace AIStore.Domain.Extensions
         {
             return claimsPrincipal.FindFirst(ClaimTypes.Email)?.Value;
         }
+        public static bool IsEmailConfirm(this ClaimsPrincipal claimsPrincipal)
+        {
+            return Convert.ToBoolean(claimsPrincipal.FindFirst("EmaillConfirm")?.Value);
+        }
 
         public static Role GetRole(this ClaimsPrincipal claimsPrincipal)
         {

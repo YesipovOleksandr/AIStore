@@ -1,6 +1,7 @@
 ﻿using AIStore.Domain.Abstract.Services;
 using AIStore.Domain.Models.ExternalAuth;
 using AIStore.Domain.Models.Settings;
+using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using System.Web;
 
@@ -45,16 +46,19 @@ namespace AIStore.BLL.Services.Factory.Service
         public string GetAuthenticationUrl(string provider)
         {
             var redirectUrl = $"{_settings.ClientConfig.EnvironmentConfig.ApiUrl}api/Account/external/callback";
-            var query = HttpUtility.ParseQueryString(string.Empty);
+            var oAuthServerEndpoint = "https://www.facebook.com/dialog/oauth";
+            var queryParams = new Dictionary<string, string>
+            {
+                {"response_type","code" },
+                {"client_id", _settings.AuthenticationsConfig.Facebook.ClientId },
+                {"scope",_settings.AuthenticationsConfig.Facebook.Scope },
+                {"state", provider},
+                {"redirect_uri",redirectUrl },
+                {"display","page" }
+            };
 
-            query.Add("client_id", _settings.AuthenticationsConfig.Facebook.ClientId);
-            query.Add("redirect_uri", redirectUrl);
-            //query.Add("scope", _settings.AuthenticationsConfig.Facebook.Scope);
-            //query.Add("auth_type", "reauthenticate");//rerequest
-            query.Add("state", provider);
-            //query.Add("display", "popup");
-
-            return "https://www.facebook.com/dialog/oauth/?" + query.ToString();
+            var url = QueryHelpers.AddQueryString(oAuthServerEndpoint, queryParams);
+            return url;
         }
 
         public async Task<ProfileResult> ProfileAsync(TokenResult token)
