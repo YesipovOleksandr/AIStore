@@ -24,6 +24,11 @@ namespace AIStore.Dependencies
             {
                 settings.AuthenticationsConfig = configuration.GetSection("Authentication").Get<AuthenticationsConfig>();
             });
+
+            services.Configure<AppSettings>(settings =>
+            {
+                settings.MailSettings = configuration.GetSection("MailSettings").Get<MailSettings>();
+            });
         }
     }
 }

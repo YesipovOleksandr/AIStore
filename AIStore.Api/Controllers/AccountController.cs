@@ -1,6 +1,7 @@
 ﻿using AIStore.Api.ViewModels;
 using AIStore.Domain.Abstract.Services;
 using AIStore.Domain.Extensions;
+using AIStore.Domain.Models.Email;
 using AIStore.Domain.Models.ExternalAuth;
 using AIStore.Domain.Models.Settings;
 using AIStore.Domain.Models.Users;
@@ -24,13 +25,15 @@ namespace AIStore.Web.Controllers.API
         private readonly IOptions<AppSettings> _settings;
         private readonly IUserService _userService;
         private readonly IAuthExternalService _authExternalService;
+        private readonly IMailService _mailService;
 
         public AccountController(IAuthService authService,
                                  IMapper mapper,
                                  IOptions<AppSettings> settings,
                                  ITokenService tokenService,
                                  IAuthExternalService authExternalService,
-                                 IUserService userService)
+                                 IUserService userService,
+                                 IMailService mailService)
         {
             _authService = authService;
             _mapper = mapper;
@@ -38,6 +41,7 @@ namespace AIStore.Web.Controllers.API
             _tokenService = tokenService;
             _userService = userService;
             _authExternalService = authExternalService;
+            _mailService = mailService;
         }
 
         [AllowAnonymous]
@@ -84,6 +88,8 @@ namespace AIStore.Web.Controllers.API
                 {
                     return Unauthorized();
                 }
+
+                _mailService.SendEmailConfirm(new EmailConfirm { Email = model.Login, Code = "1313", ViewName = "/TemplateMail/EmailConfirm" });
 
                 return Ok(result);
             }

@@ -3,6 +3,7 @@ using AIStore.Domain.Abstract.Services;
 using AIStore.Domain.Abstract.Repository;
 using AIStore.DAL.Repository;
 using AIStore.BLL.Services;
+using AIStore.Domain.Abstract.Services.Mail;
 
 namespace AIStore.Dependencies.DependencyModules
 {
@@ -17,7 +18,10 @@ namespace AIStore.Dependencies.DependencyModules
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserService, UserService>();           
+            services.AddScoped<IUserService, UserService>();
+
+            //services.AddScoped<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
+            //services.AddScoped<IMailService, MailService>();
         }
     }
 }

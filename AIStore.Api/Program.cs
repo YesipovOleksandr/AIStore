@@ -1,7 +1,10 @@
 using AIStore.Api.MappingProfile;
+using AIStore.BLL.Services;
 using AIStore.DAL.Context;
 using AIStore.DAL.MappingProfile;
 using AIStore.Dependencies;
+using AIStore.Domain.Abstract.Services;
+using AIStore.Domain.Abstract.Services.Mail;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -26,6 +29,11 @@ builder.Services.RegisterDependencyModules();
 
 builder.Services.MapSettings(configuration);
 
+//MAIL
+builder.Services.AddRazorPages();
+builder.Services.AddScoped<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
+builder.Services.AddScoped<IMailService, MailService>();
+
 builder.Services.AddAutoMapper(typeof(ApiMappingProfile), typeof(DataAccessMapingProfile));
 
 builder.Services.AddAuthentication(options =>
@@ -33,10 +41,6 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddGoogle(googleOptions =>
-{
-    googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
-    googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
 }).AddJwtBearer(options =>
 {
     options.SaveToken = true;
