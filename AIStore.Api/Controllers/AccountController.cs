@@ -181,26 +181,14 @@ namespace AIStore.Web.Controllers.API
             var newPassword = "thirdPartylogin";
             var user = new User { Login = profile.Email, IsEmailСonfirm = true, Password = newPassword };
             if (!_authService.IsUserLoginExist(user.Login))
+            if (user == null)
             {
+                var newPassword = Guid.NewGuid().ToString();
+                user = new User { Login = profile.Email, IsEmailСonfirm = true, Password = newPassword };
                 user = _authService.Registration(_mapper.Map<User>(user));
-                user.Password = newPassword;
-                if (user == null)
-                {
-                    return BadRequest();
-                }
             }
-
-            var result = _authService.Authenticate(_mapper.Map<User>(user));
-
-            var tokenResult = new TokenResult
-            {
-                AccessToken = result.Token,
-                RefreshToken = result.RefreshToken,
-                Expires = result.RefreshTokenExpiryTime
-            };
-            var json = JsonConvert.SerializeObject(tokenResult, Formatting.Indented);
-            var cookieName = _settings.Value.JWTOptions.CookieName;
-            Response.Cookies.Append(cookieName, json);
+         
+            SetCookie(user);
             return Redirect(_settings.Value.ClientConfig.EnvironmentConfig.BaseUrl);
         }
 
@@ -221,17 +209,60 @@ namespace AIStore.Web.Controllers.API
             if (string.IsNullOrEmpty(profile.Email))
                 return BadRequest("Your email is required to complete the sign-in process. Email is empty.");
 
-            var user = new User { Login = profile.Email };
-            user.UserRoles = new List<UserRoles>();
+            var user = _userService.GetByLogin(profile.Email);
+            if (user == null)
+            {
+                user = new User { Login = profile.Email };
+                user.UserRoles = new List<UserRoles>();
+            }
             user.Token = _tokenService.GenerateAccessToken(user);
             user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(_settings.Value.JWTOptions.TokenLongLifeTime);
             user.RefreshToken = _tokenService.GenerateRefreshToken();
 
-            AuthViewModel result = null;
-
-            result = _mapper.Map<AuthViewModel>(user);
-
+            AuthViewModel result = _mapper.Map<AuthViewModel>(user);
             return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("email-confirmation")]
+        public async Task<IActionResult> EmailConfirm(string code, long userId)
+        {
+            var user = _userService.GetById(userId);
+            if (user == null)
+            {
+                return BadRequest("user is null");
+            }
+            try
+            {
+                _authService.EmailConfirmation(user, code);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            SetCookie(user);
+            return Redirect($"{_settings.Value.ClientConfig.EnvironmentConfig.BaseUrl}?{nameof(EmailConfirm)}=true");
+        }
+
+        private void SetCookie(User user)
+        {
+            if (user != null)
+            {
+                user.Token = _tokenService.GenerateAccessToken(user);
+                user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(_settings.Value.JWTOptions.TokenLongLifeTime);
+                user.RefreshToken = _tokenService.GenerateRefreshToken();
+                _userService.Update(user);
+                var tokenResult = new TokenResult
+                {
+                    AccessToken = user.Token,
+                    RefreshToken = user.RefreshToken,
+                    Expires = user.RefreshTokenExpiryTime
+                };
+                var json = JsonConvert.SerializeObject(tokenResult, Formatting.Indented);
+                var cookieName = _settings.Value.JWTOptions.CookieName;
+                Response.Cookies.Append(cookieName, json);
+            }
         }
     }
 }

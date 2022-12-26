@@ -18,6 +18,11 @@ namespace AIStore.BLL.Services
             return _userRepository.GetById(Id);
         }
 
+        public User GetByLogin(string login)
+        {
+            return _userRepository.GetByLogin(login);
+        }
+
         public void Update(User item)
         {
             _userRepository.Update(item);

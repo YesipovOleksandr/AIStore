@@ -41,9 +41,10 @@ namespace AIStore.DAL.Repository
         public void Update(User item)
         {
             _context.Database.ExecuteSqlRaw(@"UPDATE Users SET  
-            Login={1}, Password={2},RefreshToken={3},RefreshTokenExpiryTime={4}
+            Login={1}, Password={2},RefreshToken={3},RefreshTokenExpiryTime={4},IsEmailСonfirm={5}
             WHERE Id={0}",
-          item.Id, item.Login, item.Password, item.RefreshToken, item.RefreshTokenExpiryTime);
+            item.Id, item.Login, item.Password, item.RefreshToken, item.RefreshTokenExpiryTime, item.IsEmailСonfirm);
+            _context.SaveChanges();
         }
         public void Save()
         {

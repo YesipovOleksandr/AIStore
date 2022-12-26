@@ -29,11 +29,6 @@ builder.Services.RegisterDependencyModules();
 
 builder.Services.MapSettings(configuration);
 
-//MAIL
-builder.Services.AddRazorPages();
-builder.Services.AddScoped<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
-builder.Services.AddScoped<IMailService, MailService>();
-
 builder.Services.AddAutoMapper(typeof(ApiMappingProfile), typeof(DataAccessMapingProfile));
 
 builder.Services.AddAuthentication(options =>

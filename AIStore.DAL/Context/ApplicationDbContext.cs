@@ -14,7 +14,9 @@ namespace AIStore.DAL.Context
 
         public DbSet<User> Users { get; set; }
         public DbSet<UserRoles> UserRoles { get; set; }
+        public DbSet<VerifyCode> VerifyCode { get; set; }
 
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
