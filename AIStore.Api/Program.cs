@@ -27,7 +27,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.RegisterDependencyModules();
 
-builder.Services.MapSettings(configuration);
+builder.Services.MapSettingsApi(configuration);
 
 builder.Services.AddAutoMapper(typeof(ApiMappingProfile), typeof(DataAccessMapingProfile));
 

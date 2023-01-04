@@ -11,9 +11,9 @@ namespace AIStore.BLL.Services.Factory.Service
 {
     public class LinkedinService : IExternalService
     {
-        private readonly AppSettings _settings;
+        private readonly AppSettingsApi _settings;
 
-        public LinkedinService(AppSettings settings)
+        public LinkedinService(AppSettingsApi settings)
         {
             _settings = settings;
         }

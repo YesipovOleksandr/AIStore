@@ -6,6 +6,7 @@ using AIStore.Domain.Abstract;
 using Microsoft.EntityFrameworkCore;
 using AIStore.DAL.Context;
 using AIStore.Web.Middleware;
+using AIStore.Web.Models.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -25,7 +26,7 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddAutoMapper(typeof(WebMappingProfile));
 
-builder.Services.MapSettings(configuration);
+builder.Services.Configure<AppSettingsWeb>(settings =>{settings.ClientConfig = configuration.GetSection("ClientConfig").Get<ClientConfig>();});
 
 var app = builder.Build();
 

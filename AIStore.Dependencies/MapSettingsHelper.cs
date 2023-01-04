@@ -7,28 +7,29 @@ namespace AIStore.Dependencies
 {
     public static class MapSettingsHelper
     {
-        public static void MapSettings(this IServiceCollection services, IConfiguration configuration)
+        public static void MapSettingsApi(this IServiceCollection services, IConfiguration configuration)
         {
 
-            services.Configure<AppSettings>(settings =>
+            services.Configure<AppSettingsApi>(settings =>
             {
                 settings.ClientConfig = configuration.GetSection("ClientConfig").Get<ClientConfig>();
             });
 
-            services.Configure<AppSettings>(settings =>
+            services.Configure<AppSettingsApi>(settings =>
             {
                 settings.JWTOptions = configuration.GetSection("JWT").Get<JWTOptions>();
             });
 
-            services.Configure<AppSettings>(settings =>
+            services.Configure<AppSettingsApi>(settings =>
             {
                 settings.AuthenticationsConfig = configuration.GetSection("Authentication").Get<AuthenticationsConfig>();
             });
 
-            services.Configure<AppSettings>(settings =>
+            services.Configure<AppSettingsApi>(settings =>
             {
                 settings.MailSettings = configuration.GetSection("MailSettings").Get<MailSettings>();
             });
         }
+
     }
 }

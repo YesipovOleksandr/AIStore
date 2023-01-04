@@ -15,13 +15,13 @@ namespace AIStore.BLL.Services.Verifier
             _verifyRepository = verifyRepository;
         }
 
-        public VerifyCode SetVerificationCode(User user)
+        public VerifyCode SetVerificationCode(long userId)
         {
             var ExistModel = new VerifyCode();
 
-            if (!_verifyRepository.ExistUser(user.Id))
+            if (!_verifyRepository.ExistUser(userId))
             {
-                ExistModel.UserId = user.Id;
+                ExistModel.UserId = userId;
                 ExistModel.ExpirationTime = DateTime.UtcNow.AddMinutes(TIME_OUT_MINUTES);
                 ExistModel.Code = GetNewVerifyCode();
 
@@ -29,7 +29,7 @@ namespace AIStore.BLL.Services.Verifier
             }
             else
             {
-                ExistModel = _verifyRepository.GetByUserId(user.Id);
+                ExistModel = _verifyRepository.GetByUserId(userId);
                 ExistModel.ExpirationTime = DateTime.UtcNow.AddMinutes(TIME_OUT_MINUTES);
                 ExistModel.Code = GetNewVerifyCode();
                 _verifyRepository.Update(ExistModel);
@@ -40,6 +40,10 @@ namespace AIStore.BLL.Services.Verifier
         public void VerificationCode(long userId, string code)
         {
             var verify = _verifyRepository.GetByUserId(userId);
+            if (verify == null)
+            {
+                throw new Exception("verify is null");
+            }
             if (verify.ExpirationTime <= DateTime.UtcNow)
             {
                 throw new Exception("time is over");

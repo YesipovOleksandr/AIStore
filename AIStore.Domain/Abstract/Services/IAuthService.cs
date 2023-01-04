@@ -8,5 +8,7 @@ namespace AIStore.Domain.Abstract.Services
         User Authenticate(User user,bool isPassword=true);
         bool IsUserLoginExist(string login);
         void EmailConfirmation(User user,string code);
+        void SendActivationEmail(User user);
+        void SendForgotPassword(User model);
     }
 }

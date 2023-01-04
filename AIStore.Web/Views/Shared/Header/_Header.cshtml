@@ -1,15 +1,16 @@
 ﻿@using System.IdentityModel.Tokens.Jwt
 @using System.Security.Claims
 @using AIStore.Domain.Extensions
+
 <header>
     <div class="header_block">
         <div class="header_block_img">
             <img src="/template/images/icons/logo.svg" />
         </div>
         <div class="header_block_center">
-            <a href="#"> Услуги и цены</a>
+            <a href="#">Услуги и цены</a>
             <a href="#">Для разработчиков</a>
-            <a href="#"> О нас</a>
+            <a href="#">О нас</a>
         </div>
         <div class="header_block_end">
             <a href="#" class="header_block_end_img">
@@ -27,7 +28,7 @@
                         <h3>@User.GetUserEmail()</h3> 
                         @if (!User.IsEmailConfirm())
                         {
-                           <p style="color:red;">not confirm Email</p>
+                         <a onclick="OnClickSentActiveEmail()"><p style="color:red;">not confirm Email</p></a>
                         }
                         <ul>
                             <li>Избраное</li>

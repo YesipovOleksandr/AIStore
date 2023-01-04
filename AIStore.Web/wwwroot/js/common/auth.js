@@ -313,3 +313,14 @@ function RepeatPasswordRegistrationOnInput() {
     }
 }
 
+
+function OnClickSentActiveEmail() {
+    var cookie = decodeURIComponent(getCookie(_authCookieName));
+    var token = JSON.parse(cookie).access_token;
+    fetch(window.clientConfig.environmentconfig.apiurl + "api/Account/send-activation-email", {
+        method: "GET",
+        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }
+    }).then(response => response.json())
+        
+}
+

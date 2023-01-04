@@ -1,8 +1,6 @@
 ﻿using AIStore.Domain.Extensions;
-using AIStore.Domain.Models.Settings;
-using AIStore.Domain.Models.Settings.ClientConfigs;
+using AIStore.Web.Models.Settings;
 using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
@@ -16,11 +14,11 @@ namespace AIStore.Web.Middleware
     {
         private readonly HttpClient _httpclient;
         private readonly RequestDelegate _next;
-        private readonly IOptions<AppSettings> _appSettings;
+        private readonly IOptions<AppSettingsWeb> _appSettings;
 
         public AuthenticationMiddleware(RequestDelegate next,
                                         HttpClient httpclient,
-                                         IOptions<AppSettings> appSettings)
+                                         IOptions<AppSettingsWeb> appSettings)
         {
             _next = next;
             _httpclient = httpclient;
@@ -71,6 +69,7 @@ namespace AIStore.Web.Middleware
                     var jwt = new JwtSecurityTokenHandler().ReadJwtToken(accessToken);
                     var identity = new ClaimsIdentity(jwt.Claims, "basic");
                     context.User = new ClaimsPrincipal(identity);
+                    context.Request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
                     if (!json.ContainsKey("id"))
                     {

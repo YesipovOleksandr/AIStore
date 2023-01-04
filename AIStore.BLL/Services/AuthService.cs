@@ -14,14 +14,14 @@ namespace AIStore.BLL.Services
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
         private readonly IHasher _hasher;
-        private readonly IOptions<AppSettings> _settings;
+        private readonly IOptions<AppSettingsApi> _settings;
         private readonly IVerifierService _verifierService;
         private readonly IMailService _mailService;
 
         public AuthService(IUserRepository userRepository,
                            IHasher hasher,
                            ITokenService tokenService,
-                           IOptions<AppSettings> settings,
+                           IOptions<AppSettingsApi> settings,
                            IVerifierService verifierService,
                            IMailService mailService)
         {
@@ -69,7 +69,7 @@ namespace AIStore.BLL.Services
 
             if (!user.IsEmailСonfirm)
             {
-                var verifyCode = _verifierService.SetVerificationCode(user)?.Code;
+                var verifyCode = _verifierService.SetVerificationCode(user.Id)?.Code;
                 var linl = $"{_settings.Value.ClientConfig.EnvironmentConfig.ApiUrl}api/Account/email-confirmation?code={verifyCode}&userId={user.Id}";
                 _mailService.SendEmailConfirm(new EmailConfirm { Email = model.Login, Link = linl, Code = verifyCode, ViewName = "~/TemplateMail/EmailConfirm" });
             }
@@ -94,6 +94,33 @@ namespace AIStore.BLL.Services
                 _verifierService.VerificationCode(user.Id, code);
                 user.IsEmailСonfirm = true;
                 _userRepository.Update(user);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public void SendActivationEmail(User model)
+        {
+            try
+            {
+                var verifyCode = _verifierService.SetVerificationCode(model.Id)?.Code;
+                var linl = $"{_settings.Value.ClientConfig.EnvironmentConfig.ApiUrl}api/Account/email-confirmation?code={verifyCode}&userId={model.Id}";
+                _mailService.SendEmailConfirm(new EmailConfirm { Email = model.Login, Link = linl, Code = verifyCode, ViewName = "~/TemplateMail/EmailConfirm" });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public void SendForgotPassword(User model)
+        {
+            try
+            {
+                var verifyCode = _verifierService.SetVerificationCode(model.Id)?.Code;
+                _mailService.SendForgotPassword(new ForgotPassword { Email = model.Login, Code = verifyCode, ViewName = "~/TemplateMail/ForgotPassword" });
             }
             catch (Exception ex)
             {

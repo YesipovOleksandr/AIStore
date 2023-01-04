@@ -11,9 +11,9 @@ namespace AIStore.BLL.Services
 {
     public class AuthExternalService: IAuthExternalService
     {
-        private readonly IOptions<AppSettings> _settings;
+        private readonly IOptions<AppSettingsApi> _settings;
 
-        public AuthExternalService(IOptions<AppSettings> settings)
+        public AuthExternalService(IOptions<AppSettingsApi> settings)
         {
             _settings = settings;
         }

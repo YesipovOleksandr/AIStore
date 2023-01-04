@@ -15,9 +15,9 @@ namespace AIStore.BLL.Services
 {
     public class TokenService: ITokenService
     {
-        private readonly IOptions<AppSettings> _settings;
+        private readonly IOptions<AppSettingsApi> _settings;
     
-        public TokenService(IOptions<AppSettings> settings)
+        public TokenService(IOptions<AppSettingsApi> settings)
         {
             _settings = settings;
         }

@@ -10,30 +10,30 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Web;
 
 namespace AIStore.Web.Controllers.API
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class AccountController : ControllerBase
     {
         private readonly IAuthService _authService;
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
-        private readonly IOptions<AppSettings> _settings;
+        private readonly IOptions<AppSettingsApi> _settings;
         private readonly IUserService _userService;
         private readonly IAuthExternalService _authExternalService;
-        private readonly IMailService _mailService;
 
         public AccountController(IAuthService authService,
                                  IMapper mapper,
-                                 IOptions<AppSettings> settings,
+                                 IOptions<AppSettingsApi> settings,
                                  ITokenService tokenService,
                                  IAuthExternalService authExternalService,
-                                 IUserService userService,
-                                 IMailService mailService)
+                                 IUserService userService)
         {
             _authService = authService;
             _mapper = mapper;
@@ -41,7 +41,6 @@ namespace AIStore.Web.Controllers.API
             _tokenService = tokenService;
             _userService = userService;
             _authExternalService = authExternalService;
-            _mailService = mailService;
         }
 
         [AllowAnonymous]
@@ -89,8 +88,6 @@ namespace AIStore.Web.Controllers.API
                     return Unauthorized();
                 }
 
-                _mailService.SendEmailConfirm(new EmailConfirm { Email = model.Login, Code = "1313", ViewName = "/TemplateMail/EmailConfirm" });
-
                 return Ok(result);
             }
             else
@@ -122,7 +119,6 @@ namespace AIStore.Web.Controllers.API
             return Ok(response);
         }
 
-        [AllowAnonymous]
         [HttpPost("refresh")]
         public IActionResult Refresh([FromBody] TokenApiModel tokenApiModel)
         {
@@ -178,18 +174,16 @@ namespace AIStore.Web.Controllers.API
             if (string.IsNullOrEmpty(profile.Email))
                 return BadRequest("Your email is required to complete the sign-in process. Email is empty.");
 
-            var newPassword = "thirdPartylogin";
-            var user = new User { Login = profile.Email, IsEmailСonfirm = true, Password = newPassword };
-            if (!_authService.IsUserLoginExist(user.Login))
+            var user = _userService.GetByLogin(profile.Email);
             if (user == null)
             {
                 var newPassword = Guid.NewGuid().ToString();
                 user = new User { Login = profile.Email, IsEmailСonfirm = true, Password = newPassword };
                 user = _authService.Registration(_mapper.Map<User>(user));
             }
-         
+
             SetCookie(user);
-            return Redirect(_settings.Value.ClientConfig.EnvironmentConfig.BaseUrl);
+            return Redirect(_settings.Value.ClientConfig.EnvironmentConfig.WebUrl);
         }
 
         [AllowAnonymous]
@@ -224,6 +218,72 @@ namespace AIStore.Web.Controllers.API
         }
 
         [AllowAnonymous]
+        [HttpGet("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(string login)
+        {
+            try
+            {
+                var user = _userService.GetByLogin(login);
+                if (user == null)
+                {
+                    return BadRequest("user is null");
+                }
+
+                _authService.SendForgotPassword(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("verify-recover-password-code")]
+        public async Task<IActionResult> VerifyPasswordCode(string login,string code)
+        {
+            try
+            {
+                var user = _userService.GetByLogin(login);
+                if (user == null)
+                {
+                    return BadRequest("user is null");
+                }
+
+     
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("reset-password")]
+        public async Task<IActionResult> ResetPassord(string login,string code, string password,string passwordConfirm)
+        {
+            try
+            {
+                var user = _userService.GetByLogin(login);
+                if (user == null)
+                {
+                    return BadRequest("user is null");
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
+        }
+
+        [AllowAnonymous]
         [HttpGet("email-confirmation")]
         public async Task<IActionResult> EmailConfirm(string code, long userId)
         {
@@ -231,6 +291,11 @@ namespace AIStore.Web.Controllers.API
             if (user == null)
             {
                 return BadRequest("user is null");
+            }
+            else if (user.IsEmailСonfirm)
+            {
+                SetCookie(user);
+                return Redirect($"{_settings.Value.ClientConfig.EnvironmentConfig.WebUrl}?{nameof(EmailConfirm)}=true");
             }
             try
             {
@@ -242,9 +307,23 @@ namespace AIStore.Web.Controllers.API
             }
 
             SetCookie(user);
-            return Redirect($"{_settings.Value.ClientConfig.EnvironmentConfig.BaseUrl}?{nameof(EmailConfirm)}=true");
+            return Redirect($"{_settings.Value.ClientConfig.EnvironmentConfig.WebUrl}?{nameof(EmailConfirm)}=true");
         }
 
+        [HttpGet("send-activation-email")]
+        public async Task<IActionResult> SendActivationEmail()
+        {
+            try
+            {
+                var user = _userService.GetById(User.GetId().Value);
+                _authService.SendActivationEmail(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok();
+        }
         private void SetCookie(User user)
         {
             if (user != null)

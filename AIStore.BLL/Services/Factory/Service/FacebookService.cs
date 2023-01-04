@@ -9,9 +9,9 @@ namespace AIStore.BLL.Services.Factory.Service
 {
     public class FacebookService : IExternalService
     {
-        private readonly AppSettings _settings;
+        private readonly AppSettingsApi _settings;
 
-        public FacebookService(AppSettings settings)
+        public FacebookService(AppSettingsApi settings)
         {
             _settings = settings;
         }

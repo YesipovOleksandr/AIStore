@@ -5,7 +5,7 @@ namespace AIStore.Domain.Abstract.Services.Verifier
 {
     public interface IVerifierService
     {
-        VerifyCode SetVerificationCode(User model);
+        VerifyCode SetVerificationCode(long userId);
         void VerificationCode(long userId, string code);
     }
 }

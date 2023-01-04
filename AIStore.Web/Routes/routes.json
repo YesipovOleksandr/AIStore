@@ -17,6 +17,15 @@
         "en"
       ],
       "url": "settings"
+    },
+    {
+      "name": "forgotPassword",
+      "controller": "Home",
+      "action": "ForgotPassword",
+      "languages": [
+        "en"
+      ],
+      "url": "forgot-password"
     }
   ]
 }

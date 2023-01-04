@@ -1,11 +1,7 @@
 ﻿@using AIStore.Domain.Abstract
 @using Microsoft.AspNetCore.Routing
-@using Microsoft.Extensions.Options
 @using AIStore.Domain.Abstract.Services
-@using AIStore.Domain.Models.Settings
 @using AIStore.Web.App_Code
-
-@inject IOptions<AppSettings> settings
 @inject IRoutesParser routesParser
 
 @section Scripts {
@@ -13,7 +9,7 @@
 }
 
 <div>
-    @Html.RenderAngularConfigs(settings.Value.ClientConfig, routesParser)
+    @Html.RenderAngularConfigs(appSettings.Value.ClientConfig, routesParser)
     <app-root>
         <div class="loader-block">
             <div class="loader"></div>

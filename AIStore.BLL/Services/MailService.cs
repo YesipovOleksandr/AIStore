@@ -13,7 +13,7 @@ namespace AIStore.BLL.Services
     {
         private readonly MailSettings _mailSettings;
         private readonly IRazorViewToStringRenderer _renderer;
-        public MailService(IOptions<AppSettings> settings, IRazorViewToStringRenderer renderer)
+        public MailService(IOptions<AppSettingsApi> settings, IRazorViewToStringRenderer renderer)
         {
             _mailSettings = settings.Value.MailSettings;
             _renderer = renderer;
@@ -55,6 +55,23 @@ namespace AIStore.BLL.Services
             MailRequest mailRequest = new MailRequest();
             mailRequest.ToEmail = model.Email;
             mailRequest.Subject = "Email Confirm";
+            var htmlBody = await _renderer.RenderViewToStringAsync($"{model.ViewName}Html.cshtml", model);
+            mailRequest.Body = htmlBody;
+            try
+            {
+                await SendEmailAsync(mailRequest);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task SendForgotPassword(ForgotPassword model)
+        {
+            MailRequest mailRequest = new MailRequest();
+            mailRequest.ToEmail = model.Email;
+            mailRequest.Subject = "Forgot password";
             var htmlBody = await _renderer.RenderViewToStringAsync($"{model.ViewName}Html.cshtml", model);
             mailRequest.Body = htmlBody;
             try

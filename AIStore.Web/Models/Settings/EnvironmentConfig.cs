@@ -1,4 +1,4 @@
-﻿namespace AIStore.Domain.Models.Settings.ClientConfigs
+﻿namespace AIStore.Web.Models.Settings
 {
     public class EnvironmentConfig
     {

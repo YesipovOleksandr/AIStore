@@ -7,7 +7,7 @@ namespace AIStore.BLL.Services.Factory
 {
     static class AuthExternalServiceFactory
     {
-        public static IExternalService CreateService(string provider, AppSettings settings)
+        public static IExternalService CreateService(string provider, AppSettingsApi settings)
         {
 
             if (object.Equals(settings, null))

@@ -1,3 +1,5 @@
 ﻿@using AIStore.Web
 @using AIStore.Web.Models
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using AIStore.Web.Models.Settings
+@using Microsoft.Extensions.Options
+@inject IOptions<AppSettingsWeb> appSettings

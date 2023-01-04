@@ -11,5 +11,6 @@ namespace AIStore.Domain.Abstract.Services
     {
         Task SendEmailAsync(MailRequest mailRequest);
         Task SendEmailConfirm(EmailConfirm model);
+        Task SendForgotPassword(ForgotPassword model);
     }
 }

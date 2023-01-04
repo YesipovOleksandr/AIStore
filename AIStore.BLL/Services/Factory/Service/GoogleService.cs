@@ -11,9 +11,9 @@ namespace AIStore.BLL.Services.Factory.Service
 {
     public class GoogleService: IExternalService
     {
-        private readonly AppSettings _settings;
+        private readonly AppSettingsApi _settings;
 
-        public GoogleService(AppSettings settings)
+        public GoogleService(AppSettingsApi settings)
         {
             _settings = settings;
         }

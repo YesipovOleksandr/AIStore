@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
-using AIStore.Domain.Models.Settings.ClientConfigs;
 using AIStore.Domain.Abstract;
+using AIStore.Web.Models.Settings;
 
 namespace AIStore.Web.App_Code
 {
