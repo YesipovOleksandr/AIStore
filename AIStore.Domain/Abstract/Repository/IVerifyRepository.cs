@@ -7,8 +7,8 @@ namespace AIStore.Domain.Abstract.Repository
     {
         VerifyCode GetById(long Id);
         VerifyCode GetByUserId(long Id);
-        VerifyCode Create(VerifyCode item);
-        bool ExistUser(long userId);
+        Task<VerifyCode> Create(VerifyCode item);
+        Task<bool> ExistUser(long userId);
         void Update(VerifyCode item);
         void Save();
         void Remove(VerifyCode item);

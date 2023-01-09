@@ -20,7 +20,8 @@ namespace AIStore.Web.Controllers
 
         public IActionResult ForgotPassword()
         {
-            return View("~/Views/Home/Account/forgotPassword.cshtml");
+            //return View("~/Views/Home/Account/forgotPassword.cshtml");
+            return View("Index");
         }
 
         public IActionResult Settings()

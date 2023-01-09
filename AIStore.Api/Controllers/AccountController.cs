@@ -1,5 +1,6 @@
 ﻿using AIStore.Api.ViewModels;
 using AIStore.Domain.Abstract.Services;
+using AIStore.Domain.Abstract.Services.Verifier;
 using AIStore.Domain.Extensions;
 using AIStore.Domain.Models.Email;
 using AIStore.Domain.Models.ExternalAuth;
@@ -10,9 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using System.Security.Claims;
-using System.Text.Json;
-using System.Web;
+
 
 namespace AIStore.Web.Controllers.API
 {
@@ -27,13 +26,15 @@ namespace AIStore.Web.Controllers.API
         private readonly IOptions<AppSettingsApi> _settings;
         private readonly IUserService _userService;
         private readonly IAuthExternalService _authExternalService;
+        private readonly IVerifierService _verifierService;
 
         public AccountController(IAuthService authService,
                                  IMapper mapper,
                                  IOptions<AppSettingsApi> settings,
                                  ITokenService tokenService,
                                  IAuthExternalService authExternalService,
-                                 IUserService userService)
+                                 IUserService userService,
+                                 IVerifierService verifierService)
         {
             _authService = authService;
             _mapper = mapper;
@@ -41,6 +42,7 @@ namespace AIStore.Web.Controllers.API
             _tokenService = tokenService;
             _userService = userService;
             _authExternalService = authExternalService;
+            _verifierService = verifierService;
         }
 
         [AllowAnonymous]
@@ -179,7 +181,7 @@ namespace AIStore.Web.Controllers.API
             {
                 var newPassword = Guid.NewGuid().ToString();
                 user = new User { Login = profile.Email, IsEmailСonfirm = true, Password = newPassword };
-                user = _authService.Registration(_mapper.Map<User>(user));
+                user = await _authService.Registration(_mapper.Map<User>(user));
             }
 
             SetCookie(user);
@@ -229,7 +231,7 @@ namespace AIStore.Web.Controllers.API
                     return BadRequest("user is null");
                 }
 
-                _authService.SendForgotPassword(user);
+              await _authService.SendForgotPassword(user);
             }
             catch (Exception ex)
             {
@@ -251,7 +253,7 @@ namespace AIStore.Web.Controllers.API
                     return BadRequest("user is null");
                 }
 
-     
+                _verifierService.VerificationCode(user.Id, code, false);
             }
             catch (Exception ex)
             {
@@ -262,17 +264,19 @@ namespace AIStore.Web.Controllers.API
         }
 
         [AllowAnonymous]
-        [HttpGet("reset-password")]
-        public async Task<IActionResult> ResetPassord(string login,string code, string password,string passwordConfirm)
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassord(ResetPassordViewModel  model)
         {
             try
             {
-                var user = _userService.GetByLogin(login);
+                var user = _userService.GetByLogin(model.login);
                 if (user == null)
                 {
                     return BadRequest("user is null");
                 }
 
+                _verifierService.VerificationCode(user.Id, model.code);
+                _authService.ResetPassword(user,model.newPassword);
 
             }
             catch (Exception ex)

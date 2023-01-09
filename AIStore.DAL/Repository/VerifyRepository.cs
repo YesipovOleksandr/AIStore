@@ -17,18 +17,18 @@ namespace AIStore.DAL.Repository
             _mapper = mapper;
         }
 
-        public VerifyCode Create(VerifyCode item)
+        public async Task<VerifyCode> Create(VerifyCode item)
         {
             var newUser = _mapper.Map<Entities.VerifyCode>(item);
-            _context.Add(newUser);
-            _context.SaveChanges();
+            await _context.AddAsync(newUser);
+            await _context.SaveChangesAsync();
 
             return _mapper.Map<VerifyCode>(newUser);
         }
 
-        public bool ExistUser(long userId)
+        public async Task<bool> ExistUser(long userId)
         {
-            bool result = _context.VerifyCode.SingleOrDefault(x => x.UserId == userId) != null;
+            bool result = await _context.VerifyCode.SingleOrDefaultAsync(x => x.UserId == userId) != null;
             return result;
         }
 

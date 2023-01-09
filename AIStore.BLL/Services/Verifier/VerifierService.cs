@@ -15,17 +15,17 @@ namespace AIStore.BLL.Services.Verifier
             _verifyRepository = verifyRepository;
         }
 
-        public VerifyCode SetVerificationCode(long userId)
+        public async Task<VerifyCode> SetVerificationCode(long userId)
         {
             var ExistModel = new VerifyCode();
 
-            if (!_verifyRepository.ExistUser(userId))
+            if (!await _verifyRepository.ExistUser(userId))
             {
                 ExistModel.UserId = userId;
                 ExistModel.ExpirationTime = DateTime.UtcNow.AddMinutes(TIME_OUT_MINUTES);
                 ExistModel.Code = GetNewVerifyCode();
 
-                _verifyRepository.Create(ExistModel);
+                await _verifyRepository.Create(ExistModel);
             }
             else
             {
@@ -37,7 +37,7 @@ namespace AIStore.BLL.Services.Verifier
             return ExistModel;
         }
 
-        public void VerificationCode(long userId, string code)
+        public void VerificationCode(long userId, string code,bool isRemoveCode=true)
         {
             var verify = _verifyRepository.GetByUserId(userId);
             if (verify == null)
@@ -52,7 +52,7 @@ namespace AIStore.BLL.Services.Verifier
             {
                 throw new Exception("wrong code");
             }
-            _verifyRepository.Remove(verify);
+            if(isRemoveCode)_verifyRepository.Remove(verify);
         }
 
         private string GetNewVerifyCode()

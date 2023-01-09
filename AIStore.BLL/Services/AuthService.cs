@@ -55,7 +55,7 @@ namespace AIStore.BLL.Services
             return user;
         }
 
-        public User Registration(User model)
+        public async Task<User> Registration(User model)
         {
             User newUser = new User
             {
@@ -69,9 +69,9 @@ namespace AIStore.BLL.Services
 
             if (!user.IsEmailСonfirm)
             {
-                var verifyCode = _verifierService.SetVerificationCode(user.Id)?.Code;
-                var linl = $"{_settings.Value.ClientConfig.EnvironmentConfig.ApiUrl}api/Account/email-confirmation?code={verifyCode}&userId={user.Id}";
-                _mailService.SendEmailConfirm(new EmailConfirm { Email = model.Login, Link = linl, Code = verifyCode, ViewName = "~/TemplateMail/EmailConfirm" });
+                var verify = await _verifierService.SetVerificationCode(user.Id);
+                var linl = $"{_settings.Value.ClientConfig.EnvironmentConfig.ApiUrl}api/Account/email-confirmation?code={verify.Code}&userId={user.Id}";
+                await _mailService.SendEmailConfirm(new EmailConfirm { Email = model.Login, Link = linl, Code = verify.Code, ViewName = "~/TemplateMail/EmailConfirm" });
             }
 
             return user;
@@ -101,13 +101,13 @@ namespace AIStore.BLL.Services
             }
         }
 
-        public void SendActivationEmail(User model)
+        public async void SendActivationEmail(User model)
         {
             try
             {
-                var verifyCode = _verifierService.SetVerificationCode(model.Id)?.Code;
-                var linl = $"{_settings.Value.ClientConfig.EnvironmentConfig.ApiUrl}api/Account/email-confirmation?code={verifyCode}&userId={model.Id}";
-                _mailService.SendEmailConfirm(new EmailConfirm { Email = model.Login, Link = linl, Code = verifyCode, ViewName = "~/TemplateMail/EmailConfirm" });
+                var verify = await _verifierService.SetVerificationCode(model.Id);
+                var linl = $"{_settings.Value.ClientConfig.EnvironmentConfig.ApiUrl}api/Account/email-confirmation?code={verify.Code}&userId={model.Id}";
+                await _mailService.SendEmailConfirm(new EmailConfirm { Email = model.Login, Link = linl, Code = verify.Code, ViewName = "~/TemplateMail/EmailConfirm" });
             }
             catch (Exception ex)
             {
@@ -115,12 +115,25 @@ namespace AIStore.BLL.Services
             }
         }
 
-        public void SendForgotPassword(User model)
+        public async Task SendForgotPassword(User model)
         {
             try
             {
-                var verifyCode = _verifierService.SetVerificationCode(model.Id)?.Code;
-                _mailService.SendForgotPassword(new ForgotPassword { Email = model.Login, Code = verifyCode, ViewName = "~/TemplateMail/ForgotPassword" });
+                var verify = await _verifierService.SetVerificationCode(model.Id);
+                await _mailService.SendForgotPassword(new ForgotPassword { Email = model.Login, Code = verify.Code, ViewName = "~/TemplateMail/ForgotPassword" });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public void ResetPassword(User model, string newPassword)
+        {
+            try
+            {
+                model.Password = _hasher.GetHash(newPassword);
+                _userRepository.Update(model);
             }
             catch (Exception ex)
             {

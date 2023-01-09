@@ -1,6 +1,10 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200&family=Roboto:wght@500&display=swap');
 
-body header{
+body, header {
+    margin: 0px;
+}
+
+body header {
     font-family: 'Roboto', sans-serif !important;
 }
 

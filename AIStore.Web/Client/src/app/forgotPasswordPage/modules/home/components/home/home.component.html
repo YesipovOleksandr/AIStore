@@ -1,0 +1,28 @@
+<div class="card forgot-password">
+  <div class="auth-form forgot-password">
+    <div class="row labels">
+      <h2>Forgot your password?</h2>
+      <h3>Don't worry. Just enter your login below and we'll send you some instructions.</h3>
+    </div>
+    <div [ngClass]="isSendCode?'update_password':''" class="row email">
+      <input *ngIf="!isGetCode&&!isSendCode" type="email" id="login" name="login" required autofocus pattern="^[^\s@＠=]+[@|＠][^\.\s@＠]+(\.[^\.\s@＠]+)+$" title="Please enter a valid email address." placeholder="login" />
+      <input *ngIf="isGetCode&&!isSendCode" type="text" id="code" name="code" required autofocus placeholder="Code" />
+      <input *ngIf="isSendCode" type="text" id="newPassword" required autofocus placeholder="Password">
+      <input *ngIf="isSendCode" type="text" id="newPasswordConfirm" required autofocus placeholder="Cofirm password">
+    </div>
+    <div class="error-message {{errorMessage?'error-visable:''}}">
+      <p [innerHtml]="errorMessage"></p>
+    </div>
+    <div *ngIf="isLoader" class="wrapper">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+    <div *ngIf="!isLoader" class="row submit">
+      <input type="submit" *ngIf="!isGetCode&&!isSendCode" (click)="getCode()" class="button big blue" value="Reset Password" />
+      <input type="submit" *ngIf="isGetCode&&!isSendCode" (click)="sendCode()" class="button big blue" value="Send Code" />
+      <input type="submit" *ngIf="isSendCode" (click)="updatePassword()" class="button big blue" value="Update Password" />
+    </div>
+  </div>
+</div>
