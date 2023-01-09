@@ -27,6 +27,7 @@
     <Folder Include="Client\src\app\shared\src\app\core\modules\" />
     <Folder Include="wwwroot\fonts\" />
     <Folder Include="wwwroot\fonts\" />
+    <Folder Include="wwwroot\js\pages\" />
   </ItemGroup>
 
   <ItemGroup>

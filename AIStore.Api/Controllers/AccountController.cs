@@ -231,7 +231,7 @@ namespace AIStore.Web.Controllers.API
                     return BadRequest("user is null");
                 }
 
-              await _authService.SendForgotPassword(user);
+                await _authService.SendForgotPassword(user);
             }
             catch (Exception ex)
             {
@@ -243,7 +243,7 @@ namespace AIStore.Web.Controllers.API
 
         [AllowAnonymous]
         [HttpGet("verify-recover-password-code")]
-        public async Task<IActionResult> VerifyPasswordCode(string login,string code)
+        public async Task<IActionResult> VerifyPasswordCode(string login, string code)
         {
             try
             {
@@ -265,7 +265,7 @@ namespace AIStore.Web.Controllers.API
 
         [AllowAnonymous]
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassord(ResetPassordViewModel  model)
+        public async Task<IActionResult> ResetPassord(ResetPassordViewModel model)
         {
             try
             {
@@ -276,7 +276,7 @@ namespace AIStore.Web.Controllers.API
                 }
 
                 _verifierService.VerificationCode(user.Id, model.code);
-                _authService.ResetPassword(user,model.newPassword);
+                _authService.ResetPassword(user, model.newPassword);
 
             }
             catch (Exception ex)
@@ -320,7 +320,7 @@ namespace AIStore.Web.Controllers.API
             try
             {
                 var user = _userService.GetById(User.GetId().Value);
-                _authService.SendActivationEmail(user);
+                await _authService.SendActivationEmail(user);
             }
             catch (Exception ex)
             {

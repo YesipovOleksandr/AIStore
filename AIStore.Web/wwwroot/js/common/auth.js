@@ -320,7 +320,8 @@ function OnClickSentActiveEmail() {
     fetch(window.clientConfig.environmentconfig.apiurl + "api/Account/send-activation-email", {
         method: "GET",
         headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-        
+    }).then((response) => {
+        console.log(response);
+    })
 }
 

@@ -101,13 +101,13 @@ namespace AIStore.BLL.Services
             }
         }
 
-        public async void SendActivationEmail(User model)
+        public async Task SendActivationEmail(User model)
         {
             try
             {
                 var verify = await _verifierService.SetVerificationCode(model.Id);
-                var linl = $"{_settings.Value.ClientConfig.EnvironmentConfig.ApiUrl}api/Account/email-confirmation?code={verify.Code}&userId={model.Id}";
-                await _mailService.SendEmailConfirm(new EmailConfirm { Email = model.Login, Link = linl, Code = verify.Code, ViewName = "~/TemplateMail/EmailConfirm" });
+                var link = $"{_settings.Value.ClientConfig.EnvironmentConfig.ApiUrl}api/Account/email-confirmation?code={verify.Code}&userId={model.Id}";
+                await _mailService.SendEmailConfirm(new EmailConfirm { Email = model.Login, Link = link, Code = verify.Code, ViewName = "~/TemplateMail/EmailConfirm" });
             }
             catch (Exception ex)
             {
