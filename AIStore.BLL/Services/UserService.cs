@@ -13,20 +13,20 @@ namespace AIStore.BLL.Services
             _userRepository = userRepository;
         }
 
-        public User GetById(long Id)
+        public async Task<User> GetById(long Id)
         {
-            return _userRepository.GetById(Id);
+            return await _userRepository.GetById(Id);
         }
 
-        public User GetByLogin(string login)
+        public async Task<User> GetByLogin(string login)
         {
-            return _userRepository.GetByLogin(login);
+            return await _userRepository.GetByLogin(login);
         }
 
-        public void Update(User item)
+        public async Task Update(User item)
         {
             _userRepository.Update(item);
-            _userRepository.Save();
+            await _userRepository.Save();
         }
     }
 }

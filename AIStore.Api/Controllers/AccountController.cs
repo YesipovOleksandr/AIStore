@@ -71,11 +71,11 @@ namespace AIStore.Web.Controllers.API
 
         [AllowAnonymous]
         [HttpPost("registration")]
-        public IActionResult Registration([FromBody] RegisterViewModel model)
+        public async Task<IActionResult> Registration([FromBody] RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = _authService.Registration(_mapper.Map<User>(model));
+                var user = await _authService.Registration(_mapper.Map<User>(model));
                 if (user == null)
                 {
                     return BadRequest();
@@ -83,7 +83,7 @@ namespace AIStore.Web.Controllers.API
 
                 AuthViewModel result = null;
 
-                result = _mapper.Map<AuthViewModel>(_authService.Authenticate(_mapper.Map<User>(model)));
+                result = _mapper.Map<AuthViewModel>(await _authService.Authenticate(_mapper.Map<User>(model)));
 
                 if (result == null)
                 {
@@ -101,12 +101,12 @@ namespace AIStore.Web.Controllers.API
 
         [AllowAnonymous]
         [HttpPost("login-exist")]
-        public IActionResult IsExistEmail([FromBody] UserLoginViewModel model)
+        public async Task<IActionResult> IsExistEmail([FromBody] UserLoginViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = _authService.IsUserLoginExist(model.Login);
-                if (user)
+                var isUser = await _authService.IsUserLoginExist(model.Login);
+                if (isUser)
                 {
                     ModelState.AddModelError("LoginError", "логин уже существует");
                     return ValidationProblem(ModelState);
@@ -122,7 +122,7 @@ namespace AIStore.Web.Controllers.API
         }
 
         [HttpPost("refresh")]
-        public IActionResult Refresh([FromBody] TokenApiModel tokenApiModel)
+        public async Task<IActionResult> Refresh([FromBody] TokenApiModel tokenApiModel)
         {
             if (tokenApiModel is null)
                 return BadRequest("Invalid client request");
@@ -132,7 +132,7 @@ namespace AIStore.Web.Controllers.API
             var userId = principal.GetId();
             if (userId == null)
                 return BadRequest("Invalid client request");
-            var user = _userService.GetById(userId.Value);
+            var user = await _userService.GetById(userId.Value);
             if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
                 return BadRequest("Invalid client request");
             var newAccessToken = _tokenService.GenerateAccessToken(user);
@@ -140,7 +140,7 @@ namespace AIStore.Web.Controllers.API
             var newExpires = DateTime.Now.AddMinutes(_settings.Value.JWTOptions.TokenLongLifeTime);
             user.RefreshToken = newRefreshToken;
             user.RefreshTokenExpiryTime = newExpires;
-            _userService.Update(user);
+            await _userService.Update(user);
 
             return Ok(new TokenResult
             {
@@ -176,7 +176,7 @@ namespace AIStore.Web.Controllers.API
             if (string.IsNullOrEmpty(profile.Email))
                 return BadRequest("Your email is required to complete the sign-in process. Email is empty.");
 
-            var user = _userService.GetByLogin(profile.Email);
+            var user = await _userService.GetByLogin(profile.Email);
             if (user == null)
             {
                 var newPassword = Guid.NewGuid().ToString();
@@ -184,7 +184,7 @@ namespace AIStore.Web.Controllers.API
                 user = await _authService.Registration(_mapper.Map<User>(user));
             }
 
-            SetCookie(user);
+            await SetCookie(user);
             return Redirect(_settings.Value.ClientConfig.EnvironmentConfig.WebUrl);
         }
 
@@ -205,7 +205,7 @@ namespace AIStore.Web.Controllers.API
             if (string.IsNullOrEmpty(profile.Email))
                 return BadRequest("Your email is required to complete the sign-in process. Email is empty.");
 
-            var user = _userService.GetByLogin(profile.Email);
+            var user = await _userService.GetByLogin(profile.Email);
             if (user == null)
             {
                 user = new User { Login = profile.Email };
@@ -225,7 +225,7 @@ namespace AIStore.Web.Controllers.API
         {
             try
             {
-                var user = _userService.GetByLogin(login);
+                var user = await _userService.GetByLogin(login);
                 if (user == null)
                 {
                     return BadRequest("user is null");
@@ -269,14 +269,14 @@ namespace AIStore.Web.Controllers.API
         {
             try
             {
-                var user = _userService.GetByLogin(model.login);
+                var user = await _userService.GetByLogin(model.login);
                 if (user == null)
                 {
                     return BadRequest("user is null");
                 }
 
                 _verifierService.VerificationCode(user.Id, model.code);
-                _authService.ResetPassword(user, model.newPassword);
+               await _authService.ResetPassword(user, model.newPassword);
 
             }
             catch (Exception ex)
@@ -291,26 +291,26 @@ namespace AIStore.Web.Controllers.API
         [HttpGet("email-confirmation")]
         public async Task<IActionResult> EmailConfirm(string code, long userId)
         {
-            var user = _userService.GetById(userId);
+            var user = await _userService.GetById(userId);
             if (user == null)
             {
                 return BadRequest("user is null");
             }
             else if (user.IsEmailСonfirm)
             {
-                SetCookie(user);
+                await SetCookie(user);
                 return Redirect($"{_settings.Value.ClientConfig.EnvironmentConfig.WebUrl}?{nameof(EmailConfirm)}=true");
             }
             try
             {
-                _authService.EmailConfirmation(user, code);
+               await _authService.EmailConfirmation(user, code);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
 
-            SetCookie(user);
+            await SetCookie(user);
             return Redirect($"{_settings.Value.ClientConfig.EnvironmentConfig.WebUrl}?{nameof(EmailConfirm)}=true");
         }
 
@@ -319,7 +319,11 @@ namespace AIStore.Web.Controllers.API
         {
             try
             {
-                var user = _userService.GetById(User.GetId().Value);
+                var user = await _userService.GetById(User.GetId().Value);
+                if (user.IsEmailСonfirm)
+                {
+                    return BadRequest("user email activeted");
+                }
                 await _authService.SendActivationEmail(user);
             }
             catch (Exception ex)
@@ -328,14 +332,14 @@ namespace AIStore.Web.Controllers.API
             }
             return Ok();
         }
-        private void SetCookie(User user)
+        private async Task SetCookie(User user)
         {
             if (user != null)
             {
                 user.Token = _tokenService.GenerateAccessToken(user);
                 user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(_settings.Value.JWTOptions.TokenLongLifeTime);
                 user.RefreshToken = _tokenService.GenerateRefreshToken();
-                _userService.Update(user);
+                await _userService.Update(user);
                 var tokenResult = new TokenResult
                 {
                     AccessToken = user.Token,

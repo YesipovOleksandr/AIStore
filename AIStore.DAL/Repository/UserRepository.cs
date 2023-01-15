@@ -17,38 +17,38 @@ namespace AIStore.DAL.Repository
             _mapper = mapper;
         }
 
-        public User Create(User item)
+        public async Task<User> Create(User item)
         {
             var newUser = _mapper.Map<Entities.User>(item);
             _context.Add(newUser);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return _mapper.Map<User>(newUser);
         }
-        public User GetById(long Id)
-        {
-            var user = _mapper.Map<User>(_context.Users.Include(u => u.UserRoles).FirstOrDefault(x => x.Id == Id));
+        public async Task<User> GetById(long Id)
+        { 
+            var user = _mapper.Map<User>(await _context.Users.Include(u => u.UserRoles).FirstOrDefaultAsync(x => x.Id == Id));
             return user;
         }
 
-        public User GetByLogin(string login)
+        public async Task<User> GetByLogin(string login)
         {
-            var user = _mapper.Map<User>(_context.Users.Include(u => u.UserRoles).FirstOrDefault(x => x.Login == login));
+            var user =  _mapper.Map<User>(await _context.Users.Include(u => u.UserRoles).FirstOrDefaultAsync(x => x.Login == login));
 
             return user;
         }
 
-        public void Update(User item)
+        public async Task Update(User item)
         {
-            _context.Database.ExecuteSqlRaw(@"UPDATE Users SET  
+            await _context.Database.ExecuteSqlRawAsync(@"UPDATE Users SET  
             Login={1}, Password={2},RefreshToken={3},RefreshTokenExpiryTime={4},IsEmailСonfirm={5}
             WHERE Id={0}",
             item.Id, item.Login, item.Password, item.RefreshToken, item.RefreshTokenExpiryTime, item.IsEmailСonfirm);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
-        public void Save()
+        public async Task Save()
         {
-            _context.SaveChanges();
+           await _context.SaveChangesAsync();
         }
 
         private bool disposed = false;

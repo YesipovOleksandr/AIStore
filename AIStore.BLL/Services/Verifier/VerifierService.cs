@@ -1,6 +1,5 @@
 ﻿using AIStore.Domain.Abstract.Repository;
 using AIStore.Domain.Abstract.Services.Verifier;
-using AIStore.Domain.Models.Users;
 using AIStore.Domain.Models.Verify;
 
 namespace AIStore.BLL.Services.Verifier

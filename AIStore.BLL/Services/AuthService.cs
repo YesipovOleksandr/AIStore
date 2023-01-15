@@ -33,9 +33,9 @@ namespace AIStore.BLL.Services
             _mailService = mailService;
         }
 
-        public User Authenticate(User model, bool isPassword = true)
+        public async Task<User> Authenticate(User model, bool isPassword = true)
         {
-            var user = _userRepository.GetByLogin(model.Login);
+            var user = await _userRepository.GetByLogin(model.Login);
 
             if (user == null)
             {
@@ -51,7 +51,7 @@ namespace AIStore.BLL.Services
             user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(_settings.Value.JWTOptions.TokenLongLifeTime);
             user.RefreshToken = _tokenService.GenerateRefreshToken();
 
-            _userRepository.Update(user);
+            await _userRepository.Update(user);
             return user;
         }
 
@@ -65,7 +65,7 @@ namespace AIStore.BLL.Services
                 UserRoles = new List<UserRoles> { new UserRoles { User = model, Role = Role.User } }
             };
 
-            var user = _userRepository.Create(newUser);
+            var user = await  _userRepository.Create(newUser);
 
             if (!user.IsEmailСonfirm)
             {
@@ -77,9 +77,9 @@ namespace AIStore.BLL.Services
             return user;
         }
 
-        public bool IsUserLoginExist(string login)
+        public async Task<bool> IsUserLoginExist(string login)
         {
-            var user = _userRepository.GetByLogin(login);
+            var user = await _userRepository.GetByLogin(login);
             if (user == null)
             {
                 return false;
@@ -87,13 +87,13 @@ namespace AIStore.BLL.Services
             return true;
         }
 
-        public void EmailConfirmation(User user, string code)
+        public async Task EmailConfirmation(User user, string code)
         {
             try
             {
                 _verifierService.VerificationCode(user.Id, code);
                 user.IsEmailСonfirm = true;
-                _userRepository.Update(user);
+                await _userRepository.Update(user);
             }
             catch (Exception ex)
             {
@@ -128,12 +128,12 @@ namespace AIStore.BLL.Services
             }
         }
 
-        public void ResetPassword(User model, string newPassword)
+        public async Task ResetPassword(User model, string newPassword)
         {
             try
             {
                 model.Password = _hasher.GetHash(newPassword);
-                _userRepository.Update(model);
+               await _userRepository.Update(model);
             }
             catch (Exception ex)
             {

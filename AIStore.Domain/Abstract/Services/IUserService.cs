@@ -4,8 +4,8 @@ namespace AIStore.Domain.Abstract.Services
 {
     public interface IUserService
     {
-        User GetById(long Id);
-        User GetByLogin(string login);
-        void Update(User item);
+        Task<User> GetById(long Id);
+        Task<User> GetByLogin(string login);
+        Task Update(User item);
     }
 }
