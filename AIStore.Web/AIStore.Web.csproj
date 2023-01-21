@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <Folder Include="Client\src\app\shared\src\app\core\modules\" />
+    <Folder Include="Views\Home\Account\" />
     <Folder Include="wwwroot\fonts\" />
     <Folder Include="wwwroot\fonts\" />
     <Folder Include="wwwroot\js\pages\" />

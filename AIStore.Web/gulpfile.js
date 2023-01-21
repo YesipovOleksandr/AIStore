@@ -8,12 +8,10 @@ var gulp = require('gulp');
 var sass = require('gulp-sass')(require('sass'));
 var sourcemaps = require('gulp-sourcemaps');
 var rename = require('gulp-rename');
-const babel = require("gulp-babel");
 const concat = require('gulp-concat');
 const minify = require('gulp-minify');
 
-const BABEL_POLYFILL = './node_modules/@babel/polyfill/dist/polyfill.min.js';
-
+var sharedScripts = ['./wwwroot/js/shared/*.js'];
 var mainSectionScripts = ['./wwwroot/js/mainSection/angularHelper.js'];
 
 function mainCss() {
@@ -48,22 +46,18 @@ function minifyMainCss() {
 
 function CopyScripts() {
     return gulp.src('./wwwroot/js/**/*.js')
-        .pipe(babel({
-            presets: [['@babel/preset-env', { loose: true, modules: false }]]
-        })
-        )
         .pipe(rename(function (path) {
             path.extname = "-min" + path.extname;
         }))
         .pipe(gulp.dest('./wwwroot/dist/js/'))
-        && gulp.src(BABEL_POLYFILL)
+        && gulp.src(sharedScripts)
+            .pipe(concat('shared.js', { 'newLine': '\n' }))
+            .pipe(rename(function (path) {
+                path.extname = "-min" + path.extname;
+            }))
             .pipe(gulp.dest('./wwwroot/dist/js/'))
         && gulp.src(mainSectionScripts)
             .pipe(concat('mainSection.js', { 'newLine': '\n' }))
-            .pipe(babel({
-                presets: [['@babel/preset-env', { loose: true, modules: false }]]
-            })
-            )
             .pipe(rename(function (path) {
                 path.extname = "-min" + path.extname;
             }))
@@ -72,10 +66,6 @@ function CopyScripts() {
 
 function minifyAndCopyScripts() {
     return gulp.src('./wwwroot/js/**/*.js')
-        .pipe(babel({
-            presets: [['@babel/preset-env', { loose: true, modules: false }]]
-        })
-        )
         .pipe(minify({
             noSource: true
         }))
@@ -85,10 +75,6 @@ function minifyAndCopyScripts() {
         .pipe(gulp.dest('./wwwroot/dist/js/'))
         && gulp.src(mainSectionScripts)
             .pipe(concat('mainSection.js', { 'newLine': '\n' }))
-            .pipe(babel({
-                presets: [['@babel/preset-env', { loose: true, modules: false }]]
-            })
-            )
             .pipe(minify({
                 noSource: true
             }))
