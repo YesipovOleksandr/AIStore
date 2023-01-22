@@ -1,5 +1,6 @@
 ﻿using AIStore.Api.ViewModels;
 using AIStore.Domain.Abstract.Services;
+using AIStore.Domain.Abstract.Services.RecoverPassword;
 using AIStore.Domain.Abstract.Services.Verifier;
 using AIStore.Domain.Extensions;
 using AIStore.Domain.Models.Email;
@@ -27,6 +28,7 @@ namespace AIStore.Web.Controllers.API
         private readonly IUserService _userService;
         private readonly IAuthExternalService _authExternalService;
         private readonly IVerifierService _verifierService;
+        private readonly IRecoverPasswordService _recoverPasswordService;
 
         public AccountController(IAuthService authService,
                                  IMapper mapper,
@@ -34,7 +36,8 @@ namespace AIStore.Web.Controllers.API
                                  ITokenService tokenService,
                                  IAuthExternalService authExternalService,
                                  IUserService userService,
-                                 IVerifierService verifierService)
+                                 IVerifierService verifierService,
+                                 IRecoverPasswordService recoverPasswordService)
         {
             _authService = authService;
             _mapper = mapper;
@@ -43,6 +46,7 @@ namespace AIStore.Web.Controllers.API
             _userService = userService;
             _authExternalService = authExternalService;
             _verifierService = verifierService;
+            _recoverPasswordService = recoverPasswordService;
         }
 
         [AllowAnonymous]
@@ -253,7 +257,7 @@ namespace AIStore.Web.Controllers.API
                     return BadRequest("user is null");
                 }
 
-                _verifierService.VerificationCode(user.Id, code, false);
+                _recoverPasswordService.VerifyPasswordCode(user.Id, code, false);
             }
             catch (Exception ex)
             {
@@ -275,7 +279,7 @@ namespace AIStore.Web.Controllers.API
                     return BadRequest("user is null");
                 }
 
-                _verifierService.VerificationCode(user.Id, model.code);
+                _recoverPasswordService.VerifyPasswordCode(user.Id, model.code);
                await _authService.ResetPassword(user, model.newPassword);
 
             }

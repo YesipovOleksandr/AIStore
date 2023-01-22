@@ -36,7 +36,7 @@ namespace AIStore.BLL.Services.Verifier
             return ExistModel;
         }
 
-        public void VerificationCode(long userId, string code,bool isRemoveCode=true)
+        public void VerificationCode(long userId, string code)
         {
             var verify = _verifyRepository.GetByUserId(userId);
             if (verify == null)
@@ -51,7 +51,7 @@ namespace AIStore.BLL.Services.Verifier
             {
                 throw new Exception("wrong code");
             }
-            if(isRemoveCode)_verifyRepository.Remove(verify);
+            _verifyRepository.Remove(verify);
         }
 
         private string GetNewVerifyCode()

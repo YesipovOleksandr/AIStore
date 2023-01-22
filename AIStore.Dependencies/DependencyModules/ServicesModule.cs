@@ -6,6 +6,8 @@ using AIStore.BLL.Services;
 using AIStore.Domain.Abstract.Services.Mail;
 using AIStore.Domain.Abstract.Services.Verifier;
 using AIStore.BLL.Services.Verifier;
+using AIStore.Domain.Abstract.Services.RecoverPassword;
+using AIStore.BLL.Services.RecoverPassword;
 
 namespace AIStore.Dependencies.DependencyModules
 {
@@ -27,7 +29,12 @@ namespace AIStore.Dependencies.DependencyModules
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IVerifyRepository, VerifyRepository>();
             services.AddScoped<IVerifierService, VerifierService>();
+
+            services.AddScoped<IRecoverPasswordRepository, RecoverPasswordRepository>();
+            services.AddScoped<IRecoverPasswordService, RecoverPasswordService>();
             
+
+
         }
     }
 }

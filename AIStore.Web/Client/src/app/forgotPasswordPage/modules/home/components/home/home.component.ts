@@ -1,4 +1,5 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { forEach } from 'core-js/library/core/dict';
 import { ApiService } from "src/app/shared/src/app/core/modules/api/services/api.service";
 
 @Component({
@@ -36,7 +37,14 @@ export class HomeComponent {
 
   public sendCode() {
     this.isLoader = true;
-    this.code = (<HTMLInputElement>document.getElementById("code")).value;
+    debugger;
+    var allElements = document.querySelectorAll('.code');
+    for (var i = 0, n = allElements.length; i < n; i++) {
+      this.code +=(<HTMLInputElement>allElements[i]).value;
+    }
+
+
+
     if (this.code != "") {
       this.isLoader = false;
       this.isLoader = true;
@@ -56,7 +64,7 @@ export class HomeComponent {
     this.newPasswordConfirm = (<HTMLInputElement>document.getElementById("newPasswordConfirm")).value;
     if (this.newPassword == this.newPasswordConfirm) {
 
-      const headers = {}; 
+      const headers = {};
       let json = {};
       json["login"] = this.login;
       json["code"] = this.code;

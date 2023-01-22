@@ -6,12 +6,12 @@
     </div>
     <div [ngClass]="isSendCode?'update_password':''" class="row email">
       <input *ngIf="!isGetCode&&!isSendCode" type="email" id="login" name="login" required autofocus pattern="^[^\s@＠=]+[@|＠][^\.\s@＠]+(\.[^\.\s@＠]+)+$" title="Please enter a valid email address." placeholder="login" />
-      <div *ngIf="!isGetCode&&!isSendCode" class="code-block {{errorMessage?'error-code'}}" id="code" name="code">
-        <input class="code-input" type="text" id="code" name="code" required autofocus />
-        <input class="code-input" type="text" id="code" name="code" required autofocus />
-        <input class="code-input" type="text" id="code" name="code" required autofocus />
-        <input class="code-input" type="text" id="code" name="code" required autofocus />
-        <input class="code-input" type="text" id="code" name="code" required autofocus />
+      <div *ngIf="isGetCode&&!isSendCode" class="code-block {{errorMessage?'error-code':''}}">
+        <input class="code-input code" type="text" name="code" required autofocus />
+        <input class="code-input code" type="text" name="code" required autofocus />
+        <input class="code-input code" type="text" name="code" required autofocus />
+        <input class="code-input code" type="text" name="code" required autofocus />
+        <input class="code-input code" type="text" name="code" required autofocus />
       </div>
       <div class="error-code-block">
         <p  [innerHtml]="errorMessage"></p>

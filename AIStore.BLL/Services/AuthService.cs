@@ -1,10 +1,12 @@
 ﻿using AIStore.Domain.Abstract.Repository;
 using AIStore.Domain.Abstract.Services;
+using AIStore.Domain.Abstract.Services.RecoverPassword;
 using AIStore.Domain.Abstract.Services.Verifier;
 using AIStore.Domain.Enums;
 using AIStore.Domain.Models.Email;
 using AIStore.Domain.Models.Settings;
 using AIStore.Domain.Models.Users;
+using Microsoft.AspNetCore.Server.HttpSys;
 using Microsoft.Extensions.Options;
 
 namespace AIStore.BLL.Services
@@ -17,13 +19,15 @@ namespace AIStore.BLL.Services
         private readonly IOptions<AppSettingsApi> _settings;
         private readonly IVerifierService _verifierService;
         private readonly IMailService _mailService;
+        private readonly IRecoverPasswordService _recoverPasswordService;
 
         public AuthService(IUserRepository userRepository,
                            IHasher hasher,
                            ITokenService tokenService,
                            IOptions<AppSettingsApi> settings,
                            IVerifierService verifierService,
-                           IMailService mailService)
+                           IMailService mailService,
+                           IRecoverPasswordService recoverPasswordService)
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
@@ -31,6 +35,7 @@ namespace AIStore.BLL.Services
             _settings = settings;
             _verifierService = verifierService;
             _mailService = mailService;
+            _recoverPasswordService = recoverPasswordService;
         }
 
         public async Task<User> Authenticate(User model, bool isPassword = true)
@@ -65,7 +70,7 @@ namespace AIStore.BLL.Services
                 UserRoles = new List<UserRoles> { new UserRoles { User = model, Role = Role.User } }
             };
 
-            var user = await  _userRepository.Create(newUser);
+            var user = await _userRepository.Create(newUser);
 
             if (!user.IsEmailСonfirm)
             {
@@ -119,7 +124,7 @@ namespace AIStore.BLL.Services
         {
             try
             {
-                var verify = await _verifierService.SetVerificationCode(model.Id);
+                var verify = await _recoverPasswordService.SetRecoverPasswordCode(model.Id);
                 await _mailService.SendForgotPassword(new ForgotPassword { Email = model.Login, Code = verify.Code, ViewName = "~/TemplateMail/ForgotPassword" });
             }
             catch (Exception ex)
@@ -133,7 +138,7 @@ namespace AIStore.BLL.Services
             try
             {
                 model.Password = _hasher.GetHash(newPassword);
-               await _userRepository.Update(model);
+                await _userRepository.Update(model);
             }
             catch (Exception ex)
             {
