@@ -20,7 +20,7 @@
       <input *ngIf="isSendCode" type="text" id="newPassword" required autofocus placeholder="Password">
       <input *ngIf="isSendCode" type="text" id="newPasswordConfirm" required autofocus placeholder="Cofirm password">
     </div>
-    <div class="error-message {{errorMessage?'error-visable:''}}">
+    <div class="error-message {{errorMessage?'error-visable'':''}}">
       <p [innerHtml]="errorMessage"></p>
     </div>
     <div *ngIf="isLoader" class="wrapper">
