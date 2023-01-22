@@ -51,11 +51,11 @@ namespace AIStore.Web.Controllers.API
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody] LoginViewModel model)
+        public async Task<IActionResult> Authenticate([FromBody] LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = _authService.Authenticate(_mapper.Map<User>(model));
+                var user = await _authService.Authenticate(_mapper.Map<User>(model));
                 if (user == null)
                 {
                     return Unauthorized();
